@@ -4,1137 +4,615 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Hawks World Cup 2026 Sweep</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-:root {
-  --black:    #0c0c0c;
-  --black2:   #161616;
-  --black3:   #1f1f1f;
-  --red:      #cc1525;
-  --red2:     #e81a2c;
-  --red-glow: rgba(204,21,37,0.18);
-  --gold:     #e6b84a;
-  --white:    #f2ede9;
-  --muted:    rgba(242,237,233,0.42);
-  --border:   rgba(255,255,255,0.07);
-  --border-r: rgba(204,21,37,0.35);
-  --radius:   10px;
-}
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
-body {
-  font-family: 'Inter', sans-serif;
-  background: var(--black);
-  color: var(--white);
-  min-height: 100vh;
-}
-/* stripe texture */
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background: repeating-linear-gradient(
-    180deg,
-    rgba(204,21,37,0.035) 0px, rgba(204,21,37,0.035) 1px,
-    transparent 1px, transparent 72px
-  );
-  pointer-events: none;
-  z-index: 0;
-}
-.wrap { position: relative; z-index: 1; }
-
-/* ── HERO ─────────────────────────────────────────────── */
-.hero {
-  padding: 44px 20px 28px;
-  text-align: center;
-}
-.eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 3.5px;
-  text-transform: uppercase;
-  color: var(--red2);
-  margin-bottom: 10px;
-}
-.dot {
-  width: 7px; height: 7px;
-  border-radius: 50%;
-  background: var(--red2);
-  animation: blink 1.5s ease-in-out infinite;
-}
-@keyframes blink { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.3;transform:scale(.7)} }
-.hero-title {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: clamp(52px, 11vw, 100px);
-  line-height: .9;
-  letter-spacing: 1px;
-  color: var(--white);
-}
-.hero-title em { color: var(--red2); font-style: normal; }
-.hero-sub {
-  margin-top: 12px;
-  font-size: 13px;
-  color: var(--muted);
-  letter-spacing: .3px;
-}
-.update-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  margin-top: 10px;
-  font-size: 11px;
-  color: rgba(242,237,233,0.35);
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 100px;
-  padding: 4px 14px;
-}
-.update-pill .dot { width:5px;height:5px;background:var(--gold);animation:none; }
-
-/* ── TABS ─────────────────────────────────────────────── */
-.tabs {
-  display: flex;
-  gap: 6px;
-  padding: 0 16px 22px;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-.tab {
-  padding: 7px 17px;
-  border-radius: 100px;
-  font-size: 12px;
-  font-weight: 500;
-  cursor: pointer;
-  border: 1px solid var(--border-r);
-  color: var(--muted);
-  background: transparent;
-  transition: all .15s;
-  user-select: none;
-  white-space: nowrap;
-}
-.tab:hover  { border-color: var(--red2); color: var(--white); }
-.tab.active { background: var(--red); color: var(--white); border-color: var(--red); font-weight: 600; }
-
-/* ── CONTENT ─────────────────────────────────────────── */
-.content { max-width: 980px; margin: 0 auto; padding: 0 14px 80px; }
-.page { display: none; }
-.page.active { display: block; }
-
-/* ── LOADING / ERROR ─────────────────────────────────── */
-.loading-box {
-  text-align: center;
-  padding: 48px 20px;
-  color: var(--muted);
-  font-size: 14px;
-}
-.spinner {
-  width: 28px; height: 28px;
-  border: 2px solid rgba(255,255,255,0.1);
-  border-top-color: var(--red2);
-  border-radius: 50%;
-  animation: spin .8s linear infinite;
-  margin: 0 auto 14px;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
-.error-box {
-  background: rgba(204,21,37,0.1);
-  border: 1px solid var(--border-r);
-  border-radius: var(--radius);
-  padding: 16px 20px;
-  font-size: 13px;
-  color: var(--red2);
-  margin-bottom: 16px;
-}
-
-/* ── SECTION LABEL ───────────────────────────────────── */
-.sec {
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: var(--red2);
-  padding: 20px 0 10px;
-}
-
-/* ── LIVE SCORE CARDS ────────────────────────────────── */
-.matches-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-bottom: 16px;
-}
-.match-card {
-  background: var(--black2);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 14px 16px;
-  transition: border-color .15s;
-}
-.match-card:hover  { border-color: var(--border-r); }
-.match-card.live   { border-color: var(--red2); box-shadow: 0 0 12px rgba(204,21,37,0.15); }
-.match-card.sweep  { border-left: 3px solid var(--gold); }
-.mc-top {
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  align-items: center;
-  gap: 10px;
-}
-.mc-team {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.mc-team.r { flex-direction: row-reverse; text-align: right; }
-.mc-flag { font-size: 22px; flex-shrink: 0; }
-.mc-name { font-size: 14px; font-weight: 500; }
-.mc-owner { font-size: 11px; color: var(--gold); margin-top: 1px; }
-.mc-center { text-align: center; }
-.mc-score {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 28px;
-  color: var(--red2);
-  line-height: 1;
-}
-.mc-score.live { color: #22d47a; }
-.mc-status {
-  font-size: 10px;
-  color: var(--muted);
-  margin-top: 2px;
-  letter-spacing: .5px;
-}
-.mc-status.live-txt {
-  color: #22d47a;
-  font-weight: 700;
-  letter-spacing: 1px;
-}
-.mc-bottom {
-  margin-top: 10px;
-  padding-top: 10px;
-  border-top: 1px solid var(--border);
-  font-size: 12px;
-  color: rgba(242,237,233,0.6);
-}
-.mc-scorer { margin-bottom: 3px; }
-.mc-note {
-  font-size: 11px;
-  color: var(--gold);
-  font-style: italic;
-  margin-top: 6px;
-}
-/* date divider */
-.date-div {
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 2.5px;
-  text-transform: uppercase;
-  color: var(--muted);
-  padding: 18px 0 6px;
-  border-bottom: 1px solid var(--border);
-  margin-bottom: 4px;
-}
-.date-div.today { color: var(--gold); }
-
-/* ── GROUPS GRID ─────────────────────────────────────── */
-.groups-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
-  gap: 10px;
-}
-.grp-card {
-  background: var(--black2);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  overflow: hidden;
-}
-.grp-hdr {
-  background: var(--red);
-  padding: 8px 12px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.grp-letter {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 24px;
-  color: var(--white);
-  line-height: 1;
-}
-.grp-desc { font-size: 11px; color: rgba(255,255,255,0.7); line-height: 1.3; }
-.grp-rows { padding: 4px 0; }
-.grp-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 6px 12px;
-  border-bottom: 1px solid var(--border);
-  font-size: 13px;
-}
-.grp-row:last-child { border-bottom: none; }
-.grp-flag { font-size: 17px; flex-shrink: 0; }
-.grp-tname { flex: 1; }
-.grp-owner { font-size: 11px; color: var(--gold); white-space: nowrap; }
-.grp-pts {
-  font-size: 13px;
-  font-weight: 600;
-  min-width: 18px;
-  text-align: right;
-  color: var(--white);
-}
-
-/* ── BRACKET ─────────────────────────────────────────── */
-.bracket-scroll { overflow-x: auto; padding-bottom: 12px; }
-.bracket { display: flex; min-width: 860px; gap: 0; }
-.b-round { flex: 1; min-width: 140px; }
-.b-round-lbl {
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--red2);
-  text-align: center;
-  padding: 0 6px 12px;
-}
-.b-round-lbl small { display: block; color: rgba(255,255,255,0.25); font-size: 8px; margin-top: 2px; letter-spacing: 1px; }
-.b-slots { display: flex; flex-direction: column; justify-content: space-around; flex: 1; }
-.b-slot { margin: 3px 5px; }
-.b-card {
-  background: var(--black2);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  overflow: hidden;
-  transition: border-color .14s;
-}
-.b-card:hover { border-color: var(--border-r); }
-.b-card.final-card { border-color: var(--red); }
-.b-team {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 7px 9px;
-  font-size: 12px;
-  border-bottom: 1px solid var(--border);
-}
-.b-team:last-child { border-bottom: none; }
-.b-team.winner { background: rgba(204,21,37,0.1); }
-.b-team .bf { font-size: 14px; flex-shrink: 0; }
-.b-team .bn { flex: 1; color: var(--white); }
-.b-team .bo { font-size: 10px; color: var(--gold); }
-.b-team .bs { font-family: 'Bebas Neue', sans-serif; font-size: 16px; color: var(--red2); min-width: 16px; text-align: right; }
-.b-tbd {
-  background: var(--black2);
-  border: 1px dashed rgba(255,255,255,0.1);
-  border-radius: 8px;
-  padding: 13px 8px;
-  text-align: center;
-  font-size: 11px;
-  color: rgba(255,255,255,0.18);
-  font-style: italic;
-  margin: 3px 5px;
-}
-.b-time { font-size: 9px; color: rgba(255,255,255,0.25); text-align: center; padding: 2px 6px 4px; letter-spacing: .5px; }
-
-/* ── SWEEP GRID ──────────────────────────────────────── */
-.sweep-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(145px, 1fr));
-  gap: 8px;
-}
-.sw-card {
-  background: var(--black2);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 12px;
-  transition: all .14s;
-}
-.sw-card:hover { border-color: var(--border-r); transform: translateY(-1px); }
-.sw-name {
-  font-size: 13px;
-  font-weight: 600;
-  margin-bottom: 8px;
-  padding-bottom: 7px;
-  border-bottom: 1px solid var(--border);
-}
-.sw-team {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 12px;
-  color: rgba(242,237,233,0.7);
-  padding: 3px 0;
-}
-.sw-team .sf { font-size: 14px; }
-
-/* ── ODDS ────────────────────────────────────────────── */
-.podium {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 10px;
-  margin-bottom: 20px;
-}
-.pod {
-  background: var(--black2);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 16px 12px;
-  text-align: center;
-  position: relative;
-}
-.pod.top { border-color: var(--red); background: var(--red-glow); }
-.pod-rank {
-  position: absolute;
-  top: 8px; right: 9px;
-  font-size: 9px; font-weight: 700;
-  background: var(--red); color: var(--white);
-  width: 17px; height: 17px; border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-}
-.pod-flag { font-size: 34px; line-height: 1; margin-bottom: 7px; }
-.pod-country { font-size: 13px; font-weight: 600; }
-.pod-owner { font-size: 11px; color: var(--gold); margin-top: 2px; }
-.pod-odds {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 28px; color: var(--red2);
-  margin-top: 7px; line-height: 1;
-}
-.pod-lbl { font-size: 9px; color: var(--muted); }
-.odds-tbl { width: 100%; border-collapse: collapse; }
-.odds-tbl tr { border-bottom: 1px solid var(--border); }
-.odds-tbl tr:last-child { border-bottom: none; }
-.odds-tbl td { padding: 9px 4px; font-size: 13px; color: rgba(242,237,233,0.8); vertical-align: middle; }
-.odds-tbl td:last-child { text-align: right; font-weight: 600; color: var(--gold); }
-.ow { font-size: 11px; color: var(--muted); }
-
-/* ── BOOT & CARDS ────────────────────────────────────── */
-.cb { background: var(--black2); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px; margin-bottom: 12px; }
-.st-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 8px 0;
-  border-bottom: 1px solid var(--border);
-  font-size: 13px;
-}
-.st-row:last-child { border-bottom: none; }
-.st-l { color: rgba(242,237,233,0.75); }
-.st-r { display: flex; align-items: center; gap: 6px; font-weight: 600; }
-.yc { display: inline-block; width: 10px; height: 13px; background: #f0c020; border-radius: 2px; flex-shrink: 0; }
-.rc { display: inline-block; width: 10px; height: 13px; background: var(--red2); border-radius: 2px; flex-shrink: 0; }
-.boot-row {
-  display: flex; align-items: center; gap: 12px;
-  padding: 9px 0; border-bottom: 1px solid var(--border);
-}
-.boot-row:last-child { border-bottom: none; }
-.boot-rank { font-family: 'Bebas Neue', sans-serif; font-size: 22px; color: var(--red2); width: 26px; flex-shrink: 0; }
-.boot-name { font-size: 14px; font-weight: 500; }
-.boot-nat  { font-size: 12px; color: var(--muted); }
-.boot-goals {
-  margin-left: auto;
-  font-size: 11px;
-  background: rgba(204,21,37,0.18);
-  color: var(--red2);
-  border: 1px solid var(--border-r);
-  padding: 3px 10px; border-radius: 100px; white-space: nowrap;
-}
-.match-sub { font-size: 10px; font-weight: 600; color: var(--muted); padding-bottom: 6px; border-bottom: 1px solid var(--border); margin-bottom: 6px; letter-spacing: .3px; }
-
-/* ── SOURCE NOTE ─────────────────────────────────────── */
-.src { font-size: 11px; color: rgba(242,237,233,0.22); padding: 8px 0 0; }
-
-/* ── FOOTER ─────────────────────────────────────────── */
-.footer {
-  text-align: center;
-  padding: 28px 20px;
-  font-size: 11px;
-  color: rgba(242,237,233,0.18);
-  border-top: 1px solid var(--border);
-  margin-top: 40px;
-}
-
-/* ── RESPONSIVE ──────────────────────────────────────── */
-@media (max-width: 480px) {
-  .mc-name { font-size: 12px; }
-  .mc-flag { font-size: 18px; }
-  .mc-score { font-size: 22px; }
-  .groups-grid { grid-template-columns: 1fr 1fr; }
-  .bracket { min-width: 700px; }
-  .podium { grid-template-columns: repeat(2, 1fr); }
-}
+:root{--black:#0c0c0c;--black2:#161616;--red:#cc1525;--red2:#e81a2c;--gold:#e6b84a;--white:#f2ede9;--muted:rgba(242,237,233,0.42);--border:rgba(255,255,255,0.07);--border-r:rgba(204,21,37,0.35);--radius:10px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:var(--black);color:var(--white);min-height:100vh}
+body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(180deg,rgba(204,21,37,0.035) 0,rgba(204,21,37,0.035) 1px,transparent 1px,transparent 72px);pointer-events:none;z-index:0}
+.wrap{position:relative;z-index:1}
+.hero{padding:40px 20px 24px;text-align:center}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:10px;font-weight:700;letter-spacing:3.5px;text-transform:uppercase;color:var(--red2);margin-bottom:10px}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--red2);animation:blink 1.5s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.7)}}
+.hero-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(52px,11vw,100px);line-height:.9;letter-spacing:1px}
+.hero-title em{color:var(--red2);font-style:normal}
+.hero-sub{margin-top:12px;font-size:13px;color:var(--muted)}
+.updated{display:inline-flex;align-items:center;gap:6px;margin-top:10px;font-size:11px;color:rgba(242,237,233,0.3);border:1px solid var(--border);border-radius:100px;padding:4px 14px}
+.tabs{display:flex;gap:6px;padding:0 16px 22px;flex-wrap:wrap;justify-content:center}
+.tab{padding:7px 17px;border-radius:100px;font-size:12px;font-weight:500;cursor:pointer;border:1px solid var(--border-r);color:var(--muted);background:transparent;transition:all .15s;user-select:none;white-space:nowrap}
+.tab:hover{border-color:var(--red2);color:var(--white)}
+.tab.active{background:var(--red);color:var(--white);border-color:var(--red);font-weight:600}
+.content{max-width:980px;margin:0 auto;padding:0 14px 80px}
+.page{display:none}.page.active{display:block}
+.sec{font-size:9px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--red2);padding:20px 0 10px}
+/* RESULT CARDS */
+.results-stack{display:flex;flex-direction:column;gap:8px}
+.rc{background:var(--black2);border:1px solid var(--border);border-left:3px solid var(--red2);border-radius:var(--radius);padding:14px 16px}
+.rc.sweep{border-left-color:var(--gold)}
+.rc-top{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px}
+.rc-team{display:flex;align-items:center;gap:8px}
+.rc-team.r{flex-direction:row-reverse;text-align:right}
+.rc-flag{font-size:22px;flex-shrink:0}
+.rc-name{font-size:14px;font-weight:500}
+.rc-owner{font-size:11px;color:var(--gold);margin-top:1px}
+.rc-mid{text-align:center}
+.rc-score{font-family:'Bebas Neue',sans-serif;font-size:30px;color:var(--red2);line-height:1}
+.rc-status{font-size:10px;color:var(--muted);margin-top:2px;letter-spacing:.5px}
+.rc-bottom{margin-top:10px;padding-top:10px;border-top:1px solid var(--border);font-size:12px;color:rgba(242,237,233,0.65)}
+.rc-scorer{margin-bottom:3px}
+.rc-note{font-size:11px;color:var(--gold);font-style:italic;margin-top:5px}
+/* DATE DIVIDER */
+.dh{font-size:9px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);padding:18px 0 6px;border-bottom:1px solid var(--border);margin-bottom:4px}
+.dh.today{color:var(--gold)}
+/* MATCH ROW (fixtures) */
+.match-list{display:flex;flex-direction:column;gap:2px}
+.mr{display:grid;grid-template-columns:1fr 90px 1fr;align-items:center;gap:8px;padding:9px 12px;border-radius:8px;background:rgba(255,255,255,0.03);transition:background .14s}
+.mr:hover{background:rgba(255,255,255,0.06)}
+.mr.sw{background:rgba(192,24,42,0.08);border:1px solid rgba(192,24,42,0.15)}
+.mr.sw:hover{background:rgba(192,24,42,0.13)}
+.mt{display:flex;align-items:center;gap:7px}
+.mt.r{flex-direction:row-reverse;text-align:right}
+.mt .fl{font-size:19px;flex-shrink:0}
+.mt .tn{font-size:13px;font-weight:500}
+.mt .ow{font-size:11px;color:var(--gold)}
+.mc{text-align:center}
+.mc .sc{font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--red2);line-height:1}
+.mc .vs{font-size:10px;color:rgba(255,255,255,0.3);letter-spacing:1px}
+.mc .tm{font-size:11px;color:var(--muted);display:block;margin-top:1px}
+/* GROUPS */
+.gg{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px}
+.gc{background:var(--black2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.gh{background:var(--red);padding:8px 12px;display:flex;align-items:center;gap:8px}
+.gl{font-family:'Bebas Neue',sans-serif;font-size:24px;line-height:1}
+.gd{font-size:11px;color:rgba(255,255,255,0.7);line-height:1.3}
+.gr{display:flex;align-items:center;gap:8px;padding:6px 12px;border-bottom:1px solid var(--border);font-size:13px}
+.gr:last-child{border-bottom:none}
+.gr .gf{font-size:17px;flex-shrink:0}
+.gr .gt{flex:1}
+.gr .go{font-size:11px;color:var(--gold);white-space:nowrap}
+.gr .gp{font-size:13px;font-weight:600;min-width:18px;text-align:right}
+/* SWEEP */
+.sg{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:8px}
+.sc2{background:var(--black2);border:1px solid var(--border);border-radius:var(--radius);padding:12px;transition:all .14s}
+.sc2:hover{border-color:var(--border-r);transform:translateY(-1px)}
+.sn{font-size:13px;font-weight:600;margin-bottom:8px;padding-bottom:7px;border-bottom:1px solid var(--border)}
+.st{display:flex;align-items:center;gap:5px;font-size:12px;color:rgba(242,237,233,0.7);padding:3px 0}
+/* ODDS */
+.podium{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-bottom:20px}
+.pod{background:var(--black2);border:1px solid var(--border);border-radius:var(--radius);padding:16px 12px;text-align:center;position:relative}
+.pod.top{border-color:var(--red);background:rgba(204,21,37,0.12)}
+.pod-rk{position:absolute;top:8px;right:9px;font-size:9px;font-weight:700;background:var(--red);color:var(--white);width:17px;height:17px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.pod-fl{font-size:34px;line-height:1;margin-bottom:7px}
+.pod-cn{font-size:13px;font-weight:600}
+.pod-ow{font-size:11px;color:var(--gold);margin-top:2px}
+.pod-od{font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--red2);margin-top:7px;line-height:1}
+.pod-lb{font-size:9px;color:var(--muted)}
+.otbl{width:100%;border-collapse:collapse}
+.otbl tr{border-bottom:1px solid var(--border)}
+.otbl tr:last-child{border-bottom:none}
+.otbl td{padding:9px 4px;font-size:13px;color:rgba(242,237,233,0.8);vertical-align:middle}
+.otbl td:last-child{text-align:right;font-weight:600;color:var(--gold)}
+.ow2{font-size:11px;color:var(--muted)}
+/* BOOT & CARDS */
+.cb{background:var(--black2);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:12px}
+.str{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px}
+.str:last-child{border-bottom:none}
+.stl{color:rgba(242,237,233,0.75)}
+.strv{display:flex;align-items:center;gap:6px;font-weight:600}
+.yc{display:inline-block;width:10px;height:13px;background:#f0c020;border-radius:2px;flex-shrink:0}
+.rc2{display:inline-block;width:10px;height:13px;background:var(--red2);border-radius:2px;flex-shrink:0}
+.br{display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid var(--border)}
+.br:last-child{border-bottom:none}
+.brk{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--red2);width:26px;flex-shrink:0}
+.bname{font-size:14px;font-weight:500}
+.bnat{font-size:12px;color:var(--muted)}
+.bgoal{margin-left:auto;font-size:11px;background:rgba(204,21,37,0.18);color:var(--red2);border:1px solid var(--border-r);padding:3px 10px;border-radius:100px;white-space:nowrap}
+.ms{font-size:10px;font-weight:600;color:var(--muted);padding-bottom:6px;border-bottom:1px solid var(--border);margin-bottom:6px;letter-spacing:.3px}
+/* BRACKET */
+.bscroll{overflow-x:auto;padding-bottom:12px}
+.bracket{display:flex;min-width:860px}
+.bround{flex:1;min-width:140px}
+.brndl{font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--red2);text-align:center;padding:0 6px 12px}
+.brndl small{display:block;color:rgba(255,255,255,0.25);font-size:8px;margin-top:2px}
+.bslots{display:flex;flex-direction:column;justify-content:space-around;flex:1}
+.bslot{margin:3px 5px}
+.bcard{background:var(--black2);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.bcard.final{border-color:var(--red)}
+.bteam{display:flex;align-items:center;gap:6px;padding:7px 9px;font-size:12px;border-bottom:1px solid var(--border)}
+.bteam:last-child{border-bottom:none}
+.bteam .bf{font-size:14px;flex-shrink:0}
+.bteam .bn{flex:1;color:var(--white)}
+.bteam .bo{font-size:10px;color:var(--gold)}
+.bteam .bs{font-family:'Bebas Neue',sans-serif;font-size:16px;color:var(--red2);min-width:16px;text-align:right}
+.btbd{background:var(--black2);border:1px dashed rgba(255,255,255,0.1);border-radius:8px;padding:13px 8px;text-align:center;font-size:11px;color:rgba(255,255,255,0.18);font-style:italic;margin:3px 5px}
+.btime{font-size:9px;color:rgba(255,255,255,0.25);text-align:center;padding:2px 6px 4px}
+.src{font-size:11px;color:rgba(242,237,233,0.22);padding:8px 0}
+.footer{text-align:center;padding:28px 20px;font-size:11px;color:rgba(242,237,233,0.18);border-top:1px solid var(--border);margin-top:40px}
+@media(max-width:480px){.rc-name{font-size:12px}.rc-flag{font-size:18px}.rc-score{font-size:24px}.gg{grid-template-columns:1fr 1fr}.podium{grid-template-columns:repeat(2,1fr)}}
 </style>
 </head>
 <body>
 <div class="wrap">
-
-<!-- HERO -->
 <div class="hero">
-  <div class="eyebrow"><span class="dot"></span>Live Group Stage Tracker</div>
-  <div class="hero-title"><em>Hawks</em><br>World Cup<br>2026 Sweep</div>
-  <div class="hero-sub">USA · Mexico · Canada &nbsp;·&nbsp; 11 Jun – 19 Jul 2026 &nbsp;·&nbsp; Times in AEST</div>
-  <div class="update-pill"><span class="dot"></span><span id="last-updated">Fetching live data…</span></div>
+  <div class="eyebrow"><span class="dot"></span>Group Stage Tracker</div>
+  <div class="hero-title"><em>Hawks</em><br>World Cup 2026<br>Sweep</div>
+  <div class="hero-sub">USA · Mexico · Canada &nbsp;·&nbsp; 11 Jun – 19 Jul 2026 &nbsp;·&nbsp; All times AEST</div>
+  <div class="updated">Updated 5:00 pm AEST · Wed 17 Jun 2026</div>
 </div>
-
-<!-- TABS -->
 <div class="tabs">
-  <div class="tab active" onclick="showPage('live',this)">Live Scores</div>
-  <div class="tab" onclick="showPage('fixtures',this)">All Fixtures</div>
-  <div class="tab" onclick="showPage('groups',this)">Groups</div>
-  <div class="tab" onclick="showPage('bracket',this)">Tournament Tree</div>
-  <div class="tab" onclick="showPage('sweep',this)">The Sweep</div>
-  <div class="tab" onclick="showPage('odds',this)">Favourites</div>
-  <div class="tab" onclick="showPage('boot',this)">Boot &amp; Cards</div>
+  <div class="tab active" onclick="show('results',this)">Results</div>
+  <div class="tab" onclick="show('fixtures',this)">Fixtures</div>
+  <div class="tab" onclick="show('groups',this)">Groups</div>
+  <div class="tab" onclick="show('bracket',this)">Tournament Tree</div>
+  <div class="tab" onclick="show('sweep',this)">The Sweep</div>
+  <div class="tab" onclick="show('odds',this)">Favourites</div>
+  <div class="tab" onclick="show('boot',this)">Boot &amp; Cards</div>
 </div>
-
 <div class="content">
 
-<!-- ══ LIVE SCORES ══════════════════════════════════════ -->
-<div id="live" class="page active">
-  <div class="sec">Live &amp; recent results — auto-refreshes every 60 seconds</div>
-  <div id="live-scores-container">
-    <div class="loading-box"><div class="spinner"></div>Loading live scores…</div>
+<!-- RESULTS -->
+<div id="results" class="page active">
+<div class="sec">All completed matches — 16 games played so far</div>
+<div class="results-stack">
+
+<div class="dh">Thu 11 Jun — Matchday 1</div>
+<div class="rc">
+  <div class="rc-top">
+    <div class="rc-team"><span class="rc-flag">🇲🇽</span><div><div class="rc-name">Mexico</div><div class="rc-owner">—</div></div></div>
+    <div class="rc-mid"><div class="rc-score">2–0</div><div class="rc-status">FT · Group A</div></div>
+    <div class="rc-team r"><span class="rc-flag">🇿🇦</span><div><div class="rc-name">South Africa</div><div class="rc-owner">Issy W</div></div></div>
   </div>
-  <div class="src" id="live-src"></div>
+  <div class="rc-bottom">
+    <div class="rc-scorer">⚽ Quiñones 9' · Jiménez 67'</div>
+    <div class="rc-note">⚠ 3 red cards — World Cup record. Sithole &amp; Zwane (South Africa/Issy W) suspended next game. Source: Fox Sports.</div>
+  </div>
 </div>
 
-<!-- ══ ALL FIXTURES ══════════════════════════════════════ -->
+<div class="dh">Fri 12 Jun — Matchday 2</div>
+<div class="rc sweep">
+  <div class="rc-top">
+    <div class="rc-team"><span class="rc-flag">🇰🇷</span><div><div class="rc-name">South Korea</div><div class="rc-owner">Issy W</div></div></div>
+    <div class="rc-mid"><div class="rc-score">2–1</div><div class="rc-status">FT · Group A</div></div>
+    <div class="rc-team r"><span class="rc-flag">🇨🇿</span><div><div class="rc-name">Czech Republic</div><div class="rc-owner">Dobby</div></div></div>
+  </div>
+  <div class="rc-bottom">
+    <div class="rc-scorer">⚽ Hwang In-Beom 67' · Oh Hyeon-Gyu 80' / Krejci 59'</div>
+    <div class="rc-note">South Korea comeback from 0-1 down. Issy W's Korea top of Group A. Source: Sky Sports.</div>
+  </div>
+</div>
+<div class="rc sweep">
+  <div class="rc-top">
+    <div class="rc-team"><span class="rc-flag">🇨🇦</span><div><div class="rc-name">Canada</div><div class="rc-owner">Jenna</div></div></div>
+    <div class="rc-mid"><div class="rc-score">1–1</div><div class="rc-status">FT · Group B</div></div>
+    <div class="rc-team r"><span class="rc-flag">🇧🇦</span><div><div class="rc-name">Bosnia &amp; Herz.</div><div class="rc-owner">Meg</div></div></div>
+  </div>
+  <div class="rc-bottom">
+    <div class="rc-scorer">⚽ Larin 78' (sub) / Lukić 21'</div>
+    <div class="rc-note">Canada's first ever World Cup point. Both Jenna &amp; Meg on 1pt. Source: SBS.</div>
+  </div>
+</div>
+
+<div class="dh">Sat 13 Jun — Matchday 3</div>
+<div class="rc sweep">
+  <div class="rc-top">
+    <div class="rc-team"><span class="rc-flag">🇺🇸</span><div><div class="rc-name">USA</div><div class="rc-owner">Tia</div></div></div>
+    <div class="rc-mid"><div class="rc-score">4–1</div><div class="rc-status">FT · Group D</div></div>
+    <div class="rc-team r"><span class="rc-flag">🇵🇾</span><div><div class="rc-name">Paraguay</div><div class="rc-owner">T</div></div></div>
+  </div>
+  <div class="rc-bottom">
+    <div class="rc-scorer">⚽ OG Bobadilla 7' · Balogun 31' · Balogun 2nd · Reyna / Mauricio</div>
+    <div class="rc-note">Tia's USA 3pts, top of Group D. T's Paraguay 0pts. Source: CBS Sports, Yahoo Sports.</div>
+  </div>
+</div>
+<div class="rc sweep">
+  <div class="rc-top">
+    <div class="rc-team"><span class="rc-flag">🇶🇦</span><div><div class="rc-name">Qatar</div><div class="rc-owner">Cami</div></div></div>
+    <div class="rc-mid"><div class="rc-score">1–1</div><div class="rc-status">FT · Group B</div></div>
+    <div class="rc-team r"><span class="rc-flag">🇨🇭</span><div><div class="rc-name">Switzerland</div><div class="rc-owner">—</div></div></div>
+  </div>
+  <div class="rc-bottom">
+    <div class="rc-scorer">⚽ Khoukhi 90+4' (Qatar) / Embolo 17' pen (Switz)</div>
+    <div class="rc-note">Cami's Qatar earned a late equaliser. 1pt each. Source: Yahoo Sports.</div>
+  </div>
+</div>
+<div class="rc sweep">
+  <div class="rc-top">
+    <div class="rc-team"><span class="rc-flag">🇧🇷</span><div><div class="rc-name">Brazil</div><div class="rc-owner">Dobby</div></div></div>
+    <div class="rc-mid"><div class="rc-score">1–1</div><div class="rc-status">FT · Group C</div></div>
+    <div class="rc-team r"><span class="rc-flag">🇲🇦</span><div><div class="rc-name">Morocco</div><div class="rc-owner">T</div></div></div>
+  </div>
+  <div class="rc-bottom">
+    <div class="rc-scorer">⚽ Vinicius Jr (Brazil) / Saibari (Morocco)</div>
+    <div class="rc-note">Enthralling draw — Morocco dominated spells. Dobby's Brazil &amp; T's Morocco 1pt each. Source: Yahoo Sports, ESPN.</div>
+  </div>
+</div>
+
+<div class="dh">Sun 14 Jun — Matchday 4</div>
+<div class="rc sweep">
+  <div class="rc-top">
+    <div class="rc-team"><span class="rc-flag">🇭🇹</span><div><div class="rc-name">Haiti</div><div class="rc-owner">Cami</div></div></div>
+    <div class="rc-mid"><div class="rc-score">0–1</div><div class="rc-status">FT · Group C</div></div>
+    <div class="rc-team r"><span class="rc-flag">🏴󠁧󠁢󠁳󠁣󠁴󠁿</span><div><div class="rc-name">Scotland</div><div class="rc-owner">Brad</div></div></div>
+  </div>
+  <div class="rc-bottom">
+    <div class="rc-scorer">⚽ McGinn 28' (Scotland)</div>
+    <div class="rc-note">Brad's Scotland — first World Cup win since 1990! 3pts, top of Group C. Cami's Haiti 0pts. Source: Yahoo Sports.</div>
+  </div>
+</div>
+<div class="rc sweep">
+  <div class="rc-top">
+    <div class="rc-team"><span class="rc-flag">🇦🇺</span><div><div class="rc-name">Australia</div><div class="rc-owner">Zoe</div></div></div>
+    <div class="rc-mid"><div class="rc-score">2–0</div><div class="rc-status">FT · Group D</div></div>
+    <div class="rc-team r"><span class="rc-flag">🇹🇷</span><div><div class="rc-name">Türkiye</div><div class="rc-owner">Gina</div></div></div>
+  </div>
+  <div class="rc-bottom">
+    <div class="rc-scorer">⚽ Irankunda 27' · Metcalfe 75'</div>
+    <div class="rc-note">Massive upset! Zoe's Australia 3pts, top of Group D with USA. Gina's Türkiye 0pts. Source: RotoWire, FourFourTwo.</div>
+  </div>
+</div>
+<div class="rc sweep">
+  <div class="rc-top">
+    <div class="rc-team"><span class="rc-flag">🇩🇪</span><div><div class="rc-name">Germany</div><div class="rc-owner">Lia</div></div></div>
+    <div class="rc-mid"><div class="rc-score">7–1</div><div class="rc-status">FT · Group E</div></div>
+    <div class="rc-team r"><span class="rc-flag">🇨🇼</span><div><div class="rc-name">Curaçao</div><div class="rc-owner">Zoe</div></div></div>
+  </div>
+  <div class="rc-bottom">
+    <div class="rc-scorer">⚽ Nmecha · Schlotterbeck · Havertz pen · Musiala · Brown · Undav · Havertz / Comenencia (Zoe)</div>
+    <div class="rc-note">Statement win. Lia's Germany 3pts. Zoe's Curaçao scored on debut but conceded 7. Source: ESPN, RotoWire.</div>
+  </div>
+</div>
+<div class="rc sweep">
+  <div class="rc-top">
+    <div class="rc-team"><span class="rc-flag">🇳🇱</span><div><div class="rc-name">Netherlands</div><div class="rc-owner">Shaz</div></div></div>
+    <div class="rc-mid"><div class="rc-score">2–2</div><div class="rc-status">FT · Group F</div></div>
+    <div class="rc-team r"><span class="rc-flag">🇯🇵</span><div><div class="rc-name">Japan</div><div class="rc-owner">—</div></div></div>
+  </div>
+  <div class="rc-bottom">
+    <div class="rc-scorer">⚽ Van Dijk · Summerville (Shaz) / Japan 2</div>
+    <div class="rc-note">Thrilling draw. Shaz's Netherlands 1pt. Source: ESPN.</div>
+  </div>
+</div>
+
+<div class="dh">Mon 15 Jun — Matchday 5</div>
+<div class="rc sweep">
+  <div class="rc-top">
+    <div class="rc-team"><span class="rc-flag">🇨🇮</span><div><div class="rc-name">Ivory Coast</div><div class="rc-owner">—</div></div></div>
+    <div class="rc-mid"><div class="rc-score">1–0</div><div class="rc-status">FT · Group E</div></div>
+    <div class="rc-team r"><span class="rc-flag">🇪🇨</span><div><div class="rc-name">Ecuador</div><div class="rc-owner">Laina</div></div></div>
+  </div>
+  <div class="rc-bottom">
+    <div class="rc-scorer">⚽ Ivory Coast 90' winner</div>
+    <div class="rc-note">Late heartbreaker — Laina's Ecuador 0pts. Source: RotoWire.</div>
+  </div>
+</div>
+<div class="rc sweep">
+  <div class="rc-top">
+    <div class="rc-team"><span class="rc-flag">🇸🇪</span><div><div class="rc-name">Sweden</div><div class="rc-owner">—</div></div></div>
+    <div class="rc-mid"><div class="rc-score">5–1</div><div class="rc-status">FT · Group F</div></div>
+    <div class="rc-team r"><span class="rc-flag">🇹🇳</span><div><div class="rc-name">Tunisia</div><div class="rc-owner">Brendan</div></div></div>
+  </div>
+  <div class="rc-bottom">
+    <div class="rc-scorer">⚽ Ayari 7', 90+6' · Isak 30' · Gyökeres 59' · Svanberg 84' / Rekik 43' (Brendan)</div>
+    <div class="rc-note">Brendan's Tunisia 0pts — manager fired after this. Sweden dominant. Source: ESPN, Scotsman.</div>
+  </div>
+</div>
+<div class="rc sweep">
+  <div class="rc-top">
+    <div class="rc-team"><span class="rc-flag">🇪🇸</span><div><div class="rc-name">Spain</div><div class="rc-owner">Ash</div></div></div>
+    <div class="rc-mid"><div class="rc-score">0–0</div><div class="rc-status">FT · Group H</div></div>
+    <div class="rc-team r"><span class="rc-flag">🇨🇻</span><div><div class="rc-name">Cape Verde</div><div class="rc-owner">Maddy</div></div></div>
+  </div>
+  <div class="rc-bottom">
+    <div class="rc-scorer">⚽ No goals</div>
+    <div class="rc-note">Biggest shock of the tournament — Ash's Spain held 0-0. Maddy's Cape Verde 1pt. Source: NBC News, Scotsman.</div>
+  </div>
+</div>
+<div class="rc sweep">
+  <div class="rc-top">
+    <div class="rc-team"><span class="rc-flag">🇧🇪</span><div><div class="rc-name">Belgium</div><div class="rc-owner">Gina</div></div></div>
+    <div class="rc-mid"><div class="rc-score">1–1</div><div class="rc-status">FT · Group G</div></div>
+    <div class="rc-team r"><span class="rc-flag">🇪🇬</span><div><div class="rc-name">Egypt</div><div class="rc-owner">Shaz</div></div></div>
+  </div>
+  <div class="rc-bottom">
+    <div class="rc-scorer">⚽ Belgium 1 / Egypt 1</div>
+    <div class="rc-note">Gina's Belgium &amp; Shaz's Egypt both 1pt. Source: CBS Sports.</div>
+  </div>
+</div>
+<div class="rc sweep">
+  <div class="rc-top">
+    <div class="rc-team"><span class="rc-flag">🇸🇦</span><div><div class="rc-name">Saudi Arabia</div><div class="rc-owner">Tia</div></div></div>
+    <div class="rc-mid"><div class="rc-score">1–1</div><div class="rc-status">FT · Group H</div></div>
+    <div class="rc-team r"><span class="rc-flag">🇺🇾</span><div><div class="rc-name">Uruguay</div><div class="rc-owner">Brookey</div></div></div>
+  </div>
+  <div class="rc-bottom">
+    <div class="rc-scorer">⚽ Saudi Arabia 1 / Uruguay 1</div>
+    <div class="rc-note">Tia's Saudi Arabia &amp; Brookey's Uruguay 1pt each. Source: CBS Sports, NBC News.</div>
+  </div>
+</div>
+
+<div class="dh">Tue 16 Jun — Matchday 6</div>
+<div class="rc sweep">
+  <div class="rc-top">
+    <div class="rc-team"><span class="rc-flag">🇮🇷</span><div><div class="rc-name">Iran</div><div class="rc-owner">Lia</div></div></div>
+    <div class="rc-mid"><div class="rc-score">2–2</div><div class="rc-status">FT · Group G</div></div>
+    <div class="rc-team r"><span class="rc-flag">🇳🇿</span><div><div class="rc-name">New Zealand</div><div class="rc-owner">Brendan</div></div></div>
+  </div>
+  <div class="rc-bottom">
+    <div class="rc-scorer">⚽ Iran 2 / New Zealand 2</div>
+    <div class="rc-note">Lia's Iran &amp; Brendan's NZ both 1pt. Source: CBS Sports, Fox Sports.</div>
+  </div>
+</div>
+
+</div>
+<div class="src">Sources: CBS Sports, ESPN, Fox Sports, Yahoo Sports, SBS, NBC Sports, RotoWire, Scotsman, NBC News · Updated 5pm AEST Wed 17 Jun 2026</div>
+</div>
+
+<!-- FIXTURES -->
 <div id="fixtures" class="page">
-  <div class="sec">Full group stage schedule — All times AEST (Brisbane, no daylight saving)</div>
-  <div id="all-fixtures-container">
-    <div class="loading-box"><div class="spinner"></div>Loading fixtures…</div>
-  </div>
+<div class="sec">Upcoming fixtures · All times AEST · Sweep teams highlighted</div>
+<div class="match-list">
+
+<div class="dh today">Today — Wed 17 Jun</div>
+<div class="mr sw"><div class="mt"><span class="fl">🇫🇷</span><div><div class="tn">France</div><div class="ow">Meg</div></div></div><div class="mc"><div class="vs">vs</div><span class="tm">5:00 am · Grp I</span></div><div class="mt r"><div><div class="tn">Senegal</div><div class="ow">Jenna</div></div><span class="fl">🇸🇳</span></div></div>
+<div class="mr sw"><div class="mt"><span class="fl">🇮🇶</span><div><div class="tn">Iraq</div><div class="ow">Ally</div></div></div><div class="mc"><div class="vs">vs</div><span class="tm">8:00 am · Grp I</span></div><div class="mt r"><div><div class="tn">Norway</div><div class="ow">Laina</div></div><span class="fl">🇳🇴</span></div></div>
+<div class="mr sw"><div class="mt"><span class="fl">🇦🇷</span><div><div class="tn">Argentina</div><div class="ow">Issy 2</div></div></div><div class="mc"><div class="vs">vs</div><span class="tm">11:00 am · Grp J</span></div><div class="mt r"><div><div class="tn">Algeria</div><div class="ow">Brookey</div></div><span class="fl">🇩🇿</span></div></div>
+<div class="mr sw"><div class="mt"><span class="fl">🇦🇹</span><div><div class="tn">Austria</div><div class="ow">Issy 2</div></div></div><div class="mc"><div class="vs">vs</div><span class="tm">2:00 pm · Grp J</span></div><div class="mt r"><div><div class="tn">Jordan</div><div class="ow">Brad</div></div><span class="fl">🇯🇴</span></div></div>
+
+<div class="dh">Thu 18 Jun</div>
+<div class="mr sw"><div class="mt"><span class="fl">🇵🇹</span><div><div class="tn">Portugal</div><div class="ow">Maddy</div></div></div><div class="mc"><div class="vs">vs</div><span class="tm">3:00 am · Grp K</span></div><div class="mt r"><div><div class="tn">Congo DR</div><div class="ow">Jem</div></div><span class="fl">🇨🇩</span></div></div>
+<div class="mr sw"><div class="mt"><span class="fl">🇨🇿</span><div><div class="tn">Czech Rep.</div><div class="ow">Dobby</div></div></div><div class="mc"><div class="vs">vs</div><span class="tm">12:00 pm · Grp A</span></div><div class="mt r"><div><div class="tn">South Africa</div><div class="ow">Issy W</div></div><span class="fl">🇿🇦</span></div></div>
+<div class="mr sw"><div class="mt"><span class="fl">🏴󠁧󠁢󠁥󠁮󠁧󠁿</span><div><div class="tn">England</div><div class="ow">—</div></div></div><div class="mc"><div class="vs">vs</div><span class="tm">6:00 am · Grp L</span></div><div class="mt r"><div><div class="tn">Croatia</div><div class="ow">Ally</div></div><span class="fl">🇭🇷</span></div></div>
+<div class="mr sw"><div class="mt"><span class="fl">🇬🇭</span><div><div class="tn">Ghana</div><div class="ow">Mimi</div></div></div><div class="mc"><div class="vs">vs</div><span class="tm">9:00 am · Grp L</span></div><div class="mt r"><div><div class="tn">Panama</div><div class="ow">Jem</div></div><span class="fl">🇵🇦</span></div></div>
+<div class="mr sw"><div class="mt"><span class="fl">🇺🇿</span><div><div class="tn">Uzbekistan</div><div class="ow">Ash</div></div></div><div class="mc"><div class="vs">vs</div><span class="tm">12:00 am · Grp K</span></div><div class="mt r"><div><div class="tn">Colombia</div><div class="ow">Mimi</div></div><span class="fl">🇨🇴</span></div></div>
+
+<div class="dh">Fri 19 Jun</div>
+<div class="mr sw"><div class="mt"><span class="fl">🇨🇭</span><div><div class="tn">Switzerland</div><div class="ow">—</div></div></div><div class="mc"><div class="vs">vs</div><span class="tm">5:00 am · Grp B</span></div><div class="mt r"><div><div class="tn">Bosnia &amp; Herz.</div><div class="ow">Meg</div></div><span class="fl">🇧🇦</span></div></div>
+<div class="mr sw"><div class="mt"><span class="fl">🇨🇦</span><div><div class="tn">Canada</div><div class="ow">Jenna</div></div></div><div class="mc"><div class="vs">vs</div><span class="tm">8:00 am · Grp B</span></div><div class="mt r"><div><div class="tn">Qatar</div><div class="ow">Cami</div></div><span class="fl">🇶🇦</span></div></div>
+<div class="mr sw"><div class="mt"><span class="fl">🏴󠁧󠁢󠁳󠁣󠁴󠁿</span><div><div class="tn">Scotland</div><div class="ow">Brad</div></div></div><div class="mc"><div class="vs">vs</div><span class="tm">9:00 pm · Grp C</span></div><div class="mt r"><div><div class="tn">Morocco</div><div class="ow">T</div></div><span class="fl">🇲🇦</span></div></div>
+<div class="mr sw"><div class="mt"><span class="fl">🇺🇸</span><div><div class="tn">USA</div><div class="ow">Tia</div></div></div><div class="mc"><div class="vs">vs</div><span class="tm">5:00 am · Grp D</span></div><div class="mt r"><div><div class="tn">Australia</div><div class="ow">Zoe</div></div><span class="fl">🇦🇺</span></div></div>
+<div class="mr sw"><div class="mt"><span class="fl">🇲🇽</span><div><div class="tn">Mexico</div><div class="ow">—</div></div></div><div class="mc"><div class="vs">vs</div><span class="tm">11:00 am · Grp A</span></div><div class="mt r"><div><div class="tn">South Korea</div><div class="ow">Issy W</div></div><span class="fl">🇰🇷</span></div></div>
+
+<div class="dh" style="color:rgba(255,255,255,0.2)">Further matches continue through 29 Jun · Knockout 29 Jun · Final 19 Jul</div>
+</div>
 </div>
 
-<!-- ══ GROUPS ════════════════════════════════════════════ -->
+<!-- GROUPS -->
 <div id="groups" class="page">
-  <div class="sec">12 Groups — standings update live · sweep owner in gold</div>
-  <div id="groups-container">
-    <div class="loading-box"><div class="spinner"></div>Loading group standings…</div>
-  </div>
+<div class="sec">Group standings after matchday 6 — sweep owner in gold</div>
+<div class="gg">
+<div class="gc"><div class="gh"><div class="gl">A</div><div class="gd">Mexico/Korea/S.Africa/Czech</div></div><div>
+  <div class="gr"><span class="gf">🇲🇽</span><span class="gt">Mexico</span><span class="go">—</span><span class="gp">3</span></div>
+  <div class="gr"><span class="gf">🇰🇷</span><span class="gt">South Korea</span><span class="go">Issy W</span><span class="gp">3</span></div>
+  <div class="gr"><span class="gf">🇿🇦</span><span class="gt">South Africa</span><span class="go">Issy W</span><span class="gp">0</span></div>
+  <div class="gr"><span class="gf">🇨🇿</span><span class="gt">Czech Republic</span><span class="go">Dobby</span><span class="gp">0</span></div>
+</div></div>
+<div class="gc"><div class="gh"><div class="gl">B</div><div class="gd">Canada/Bosnia/Qatar/Switz.</div></div><div>
+  <div class="gr"><span class="gf">🇨🇦</span><span class="gt">Canada</span><span class="go">Jenna</span><span class="gp">1</span></div>
+  <div class="gr"><span class="gf">🇧🇦</span><span class="gt">Bosnia &amp; Herz.</span><span class="go">Meg</span><span class="gp">1</span></div>
+  <div class="gr"><span class="gf">🇶🇦</span><span class="gt">Qatar</span><span class="go">Cami</span><span class="gp">1</span></div>
+  <div class="gr"><span class="gf">🇨🇭</span><span class="gt">Switzerland</span><span class="go">—</span><span class="gp">1</span></div>
+</div></div>
+<div class="gc"><div class="gh"><div class="gl">C</div><div class="gd">Brazil/Morocco/Haiti/Scotland</div></div><div>
+  <div class="gr"><span class="gf">🏴󠁧󠁢󠁳󠁣󠁴󠁿</span><span class="gt">Scotland</span><span class="go">Brad</span><span class="gp">3</span></div>
+  <div class="gr"><span class="gf">🇧🇷</span><span class="gt">Brazil</span><span class="go">Dobby</span><span class="gp">1</span></div>
+  <div class="gr"><span class="gf">🇲🇦</span><span class="gt">Morocco</span><span class="go">T</span><span class="gp">1</span></div>
+  <div class="gr"><span class="gf">🇭🇹</span><span class="gt">Haiti</span><span class="go">Cami</span><span class="gp">0</span></div>
+</div></div>
+<div class="gc"><div class="gh"><div class="gl">D</div><div class="gd">USA/Paraguay/Australia/Türkiye</div></div><div>
+  <div class="gr"><span class="gf">🇺🇸</span><span class="gt">United States</span><span class="go">Tia</span><span class="gp">3</span></div>
+  <div class="gr"><span class="gf">🇦🇺</span><span class="gt">Australia</span><span class="go">Zoe</span><span class="gp">3</span></div>
+  <div class="gr"><span class="gf">🇹🇷</span><span class="gt">Türkiye</span><span class="go">Gina</span><span class="gp">0</span></div>
+  <div class="gr"><span class="gf">🇵🇾</span><span class="gt">Paraguay</span><span class="go">T</span><span class="gp">0</span></div>
+</div></div>
+<div class="gc"><div class="gh"><div class="gl">E</div><div class="gd">Germany/Curaçao/Ivory C/Ecuador</div></div><div>
+  <div class="gr"><span class="gf">🇩🇪</span><span class="gt">Germany</span><span class="go">Lia</span><span class="gp">3</span></div>
+  <div class="gr"><span class="gf">🇨🇮</span><span class="gt">Ivory Coast</span><span class="go">—</span><span class="gp">3</span></div>
+  <div class="gr"><span class="gf">🇪🇨</span><span class="gt">Ecuador</span><span class="go">Laina</span><span class="gp">0</span></div>
+  <div class="gr"><span class="gf">🇨🇼</span><span class="gt">Curaçao</span><span class="go">Zoe</span><span class="gp">0</span></div>
+</div></div>
+<div class="gc"><div class="gh"><div class="gl">F</div><div class="gd">Netherlands/Japan/Sweden/Tunisia</div></div><div>
+  <div class="gr"><span class="gf">🇸🇪</span><span class="gt">Sweden</span><span class="go">—</span><span class="gp">3</span></div>
+  <div class="gr"><span class="gf">🇯🇵</span><span class="gt">Japan</span><span class="go">—</span><span class="gp">1</span></div>
+  <div class="gr"><span class="gf">🇳🇱</span><span class="gt">Netherlands</span><span class="go">Shaz</span><span class="gp">1</span></div>
+  <div class="gr"><span class="gf">🇹🇳</span><span class="gt">Tunisia</span><span class="go">Brendan</span><span class="gp">0</span></div>
+</div></div>
+<div class="gc"><div class="gh"><div class="gl">G</div><div class="gd">Belgium/Egypt/Iran/New Zealand</div></div><div>
+  <div class="gr"><span class="gf">🇧🇪</span><span class="gt">Belgium</span><span class="go">Gina</span><span class="gp">1</span></div>
+  <div class="gr"><span class="gf">🇪🇬</span><span class="gt">Egypt</span><span class="go">Shaz</span><span class="gp">1</span></div>
+  <div class="gr"><span class="gf">🇮🇷</span><span class="gt">Iran</span><span class="go">Lia</span><span class="gp">1</span></div>
+  <div class="gr"><span class="gf">🇳🇿</span><span class="gt">New Zealand</span><span class="go">Brendan</span><span class="gp">1</span></div>
+</div></div>
+<div class="gc"><div class="gh"><div class="gl">H</div><div class="gd">Spain/Cape Verde/Saudi/Uruguay</div></div><div>
+  <div class="gr"><span class="gf">🇨🇻</span><span class="gt">Cape Verde</span><span class="go">Maddy</span><span class="gp">1</span></div>
+  <div class="gr"><span class="gf">🇸🇦</span><span class="gt">Saudi Arabia</span><span class="go">Tia</span><span class="gp">1</span></div>
+  <div class="gr"><span class="gf">🇺🇾</span><span class="gt">Uruguay</span><span class="go">Brookey</span><span class="gp">1</span></div>
+  <div class="gr"><span class="gf">🇪🇸</span><span class="gt">Spain</span><span class="go">Ash</span><span class="gp">1</span></div>
+</div></div>
+<div class="gc"><div class="gh"><div class="gl">I</div><div class="gd">France/Senegal/Iraq/Norway</div></div><div>
+  <div class="gr"><span class="gf">🇫🇷</span><span class="gt">France</span><span class="go">Meg</span><span class="gp">—</span></div>
+  <div class="gr"><span class="gf">🇸🇳</span><span class="gt">Senegal</span><span class="go">Jenna</span><span class="gp">—</span></div>
+  <div class="gr"><span class="gf">🇮🇶</span><span class="gt">Iraq</span><span class="go">Ally</span><span class="gp">—</span></div>
+  <div class="gr"><span class="gf">🇳🇴</span><span class="gt">Norway</span><span class="go">Laina</span><span class="gp">—</span></div>
+</div></div>
+<div class="gc"><div class="gh"><div class="gl">J</div><div class="gd">Argentina/Algeria/Austria/Jordan</div></div><div>
+  <div class="gr"><span class="gf">🇦🇷</span><span class="gt">Argentina</span><span class="go">Issy 2</span><span class="gp">—</span></div>
+  <div class="gr"><span class="gf">🇩🇿</span><span class="gt">Algeria</span><span class="go">Brookey</span><span class="gp">—</span></div>
+  <div class="gr"><span class="gf">🇦🇹</span><span class="gt">Austria</span><span class="go">Issy 2</span><span class="gp">—</span></div>
+  <div class="gr"><span class="gf">🇯🇴</span><span class="gt">Jordan</span><span class="go">Brad</span><span class="gp">—</span></div>
+</div></div>
+<div class="gc"><div class="gh"><div class="gl">K</div><div class="gd">Portugal/Congo DR/Uzbek/Colombia</div></div><div>
+  <div class="gr"><span class="gf">🇵🇹</span><span class="gt">Portugal</span><span class="go">Maddy</span><span class="gp">—</span></div>
+  <div class="gr"><span class="gf">🇨🇩</span><span class="gt">Congo DR</span><span class="go">Jem</span><span class="gp">—</span></div>
+  <div class="gr"><span class="gf">🇺🇿</span><span class="gt">Uzbekistan</span><span class="go">Ash</span><span class="gp">—</span></div>
+  <div class="gr"><span class="gf">🇨🇴</span><span class="gt">Colombia</span><span class="go">Mimi</span><span class="gp">—</span></div>
+</div></div>
+<div class="gc"><div class="gh"><div class="gl">L</div><div class="gd">England/Croatia/Ghana/Panama</div></div><div>
+  <div class="gr"><span class="gf">🏴󠁧󠁢󠁥󠁮󠁧󠁿</span><span class="gt">England</span><span class="go">—</span><span class="gp">—</span></div>
+  <div class="gr"><span class="gf">🇭🇷</span><span class="gt">Croatia</span><span class="go">Ally</span><span class="gp">—</span></div>
+  <div class="gr"><span class="gf">🇬🇭</span><span class="gt">Ghana</span><span class="go">Mimi</span><span class="gp">—</span></div>
+  <div class="gr"><span class="gf">🇵🇦</span><span class="gt">Panama</span><span class="go">Jem</span><span class="gp">—</span></div>
+</div></div>
+</div>
 </div>
 
-<!-- ══ BRACKET ═══════════════════════════════════════════ -->
+<!-- BRACKET -->
 <div id="bracket" class="page">
-  <div class="sec">Tournament tree — TBD slots fill as teams qualify</div>
-  <div style="font-size:12px;color:rgba(242,237,233,0.28);margin-bottom:14px">
-    Groups: 11–27 Jun &nbsp;·&nbsp; R32: 28 Jun–3 Jul &nbsp;·&nbsp; R16: 4–7 Jul &nbsp;·&nbsp; QF: 9–11 Jul &nbsp;·&nbsp; SF: 14–15 Jul &nbsp;·&nbsp; Final: 19 Jul · New York/NJ
-  </div>
-  <div class="bracket-scroll">
-    <div class="bracket">
-
-      <!-- R32 -->
-      <div class="b-round">
-        <div class="b-round-lbl">Round of 32<small>28 Jun – 3 Jul</small></div>
-        <div class="b-slots" id="b-r32">
-          <!-- filled by JS where known, else TBD -->
-        </div>
-      </div>
-
-      <!-- R16 -->
-      <div class="b-round">
-        <div class="b-round-lbl">Round of 16<small>4–7 Jul</small></div>
-        <div class="b-slots">
-          <div class="b-tbd">R32 W1 vs W2</div><div class="b-tbd">R32 W3 vs W4</div>
-          <div class="b-tbd">R32 W5 vs W6</div><div class="b-tbd">R32 W7 vs W8</div>
-          <div class="b-tbd">R32 W9 vs W10</div><div class="b-tbd">R32 W11 vs W12</div>
-          <div class="b-tbd">R32 W13 vs W14</div><div class="b-tbd">R32 W15 vs W16</div>
-        </div>
-      </div>
-
-      <!-- QF -->
-      <div class="b-round">
-        <div class="b-round-lbl">Quarter Finals<small>9–11 Jul</small></div>
-        <div class="b-slots">
-          <div class="b-tbd">QF 1</div><div class="b-tbd">QF 2</div>
-          <div class="b-tbd">QF 3</div><div class="b-tbd">QF 4</div>
-        </div>
-      </div>
-
-      <!-- SF -->
-      <div class="b-round">
-        <div class="b-round-lbl">Semi Finals<small>14–15 Jul</small></div>
-        <div class="b-slots">
-          <div class="b-tbd">SF 1</div><div class="b-tbd">SF 2</div>
-        </div>
-      </div>
-
-      <!-- FINAL -->
-      <div class="b-round">
-        <div class="b-round-lbl">Final<small>19 Jul · NY/NJ</small></div>
-        <div class="b-slots" style="justify-content:center">
-          <div class="b-slot">
-            <div class="b-card final-card">
-              <div class="b-team"><span class="bf">🏆</span><span class="bn" style="color:var(--gold);font-weight:600">TBD</span><span class="bo">?</span><span class="bs">–</span></div>
-              <div class="b-team"><span class="bf">🏆</span><span class="bn" style="color:var(--gold);font-weight:600">TBD</span><span class="bo">?</span><span class="bs">–</span></div>
-            </div>
-            <div class="b-time" style="color:var(--gold);letter-spacing:1px">WORLD CUP FINAL</div>
-            <div class="b-time">19 Jul 2026</div>
-          </div>
-        </div>
-      </div>
-
-    </div><!-- /bracket -->
-  </div>
+<div class="sec">Tournament tree — slots fill as teams qualify</div>
+<div style="font-size:12px;color:rgba(242,237,233,0.28);margin-bottom:14px">Groups end 27 Jun · R32: 28 Jun–3 Jul · R16: 4–7 Jul · QF: 9–11 Jul · SF: 14–15 Jul · Final: 19 Jul NY/NJ</div>
+<div class="bscroll"><div class="bracket">
+<div class="bround"><div class="brndl">Round of 32<small>28 Jun–3 Jul</small></div><div class="bslots">
+  <div class="bslot"><div class="bcard"><div class="bteam"><span class="bf">–</span><span class="bn">1A</span><span class="bo">TBD</span><span class="bs">–</span></div><div class="bteam"><span class="bf">–</span><span class="bn">3rd best</span><span class="bo">TBD</span><span class="bs">–</span></div></div><div class="btime">28 Jun</div></div>
+  <div class="bslot"><div class="bcard"><div class="bteam"><span class="bf">–</span><span class="bn">1B</span><span class="bo">TBD</span><span class="bs">–</span></div><div class="bteam"><span class="bf">–</span><span class="bn">2E</span><span class="bo">TBD</span><span class="bs">–</span></div></div><div class="btime">29 Jun</div></div>
+  <div class="bslot"><div class="bcard"><div class="bteam"><span class="bf">–</span><span class="bn">1C</span><span class="bo">TBD</span><span class="bs">–</span></div><div class="bteam"><span class="bf">–</span><span class="bn">2F</span><span class="bo">TBD</span><span class="bs">–</span></div></div><div class="btime">29 Jun</div></div>
+  <div class="bslot"><div class="bcard"><div class="bteam"><span class="bf">–</span><span class="bn">1D</span><span class="bo">TBD</span><span class="bs">–</span></div><div class="bteam"><span class="bf">–</span><span class="bn">2G</span><span class="bo">TBD</span><span class="bs">–</span></div></div><div class="btime">30 Jun</div></div>
+  <div class="bslot"><div class="bcard"><div class="bteam"><span class="bf">–</span><span class="bn">1E</span><span class="bo">TBD</span><span class="bs">–</span></div><div class="bteam"><span class="bf">–</span><span class="bn">2H</span><span class="bo">TBD</span><span class="bs">–</span></div></div><div class="btime">30 Jun</div></div>
+  <div class="bslot"><div class="bcard"><div class="bteam"><span class="bf">–</span><span class="bn">1F</span><span class="bo">TBD</span><span class="bs">–</span></div><div class="bteam"><span class="bf">–</span><span class="bn">2I</span><span class="bo">TBD</span><span class="bs">–</span></div></div><div class="btime">1 Jul</div></div>
+  <div class="bslot"><div class="bcard"><div class="bteam"><span class="bf">–</span><span class="bn">1G</span><span class="bo">TBD</span><span class="bs">–</span></div><div class="bteam"><span class="bf">–</span><span class="bn">2J</span><span class="bo">TBD</span><span class="bs">–</span></div></div><div class="btime">1 Jul</div></div>
+  <div class="bslot"><div class="bcard"><div class="bteam"><span class="bf">–</span><span class="bn">1H</span><span class="bo">TBD</span><span class="bs">–</span></div><div class="bteam"><span class="bf">–</span><span class="bn">2K</span><span class="bo">TBD</span><span class="bs">–</span></div></div><div class="btime">2 Jul</div></div>
+  <div class="bslot"><div class="bcard"><div class="bteam"><span class="bf">–</span><span class="bn">1I</span><span class="bo">TBD</span><span class="bs">–</span></div><div class="bteam"><span class="bf">–</span><span class="bn">2L</span><span class="bo">TBD</span><span class="bs">–</span></div></div><div class="btime">2 Jul</div></div>
+  <div class="bslot"><div class="bcard"><div class="bteam"><span class="bf">–</span><span class="bn">1J</span><span class="bo">TBD</span><span class="bs">–</span></div><div class="bteam"><span class="bf">–</span><span class="bn">2A</span><span class="bo">TBD</span><span class="bs">–</span></div></div><div class="btime">3 Jul</div></div>
+  <div class="bslot"><div class="bcard"><div class="bteam"><span class="bf">–</span><span class="bn">1K</span><span class="bo">TBD</span><span class="bs">–</span></div><div class="bteam"><span class="bf">–</span><span class="bn">2B</span><span class="bo">TBD</span><span class="bs">–</span></div></div><div class="btime">3 Jul</div></div>
+  <div class="bslot"><div class="bcard"><div class="bteam"><span class="bf">–</span><span class="bn">1L</span><span class="bo">TBD</span><span class="bs">–</span></div><div class="bteam"><span class="bf">–</span><span class="bn">3rd</span><span class="bo">TBD</span><span class="bs">–</span></div></div><div class="btime">3 Jul</div></div>
+  <div class="btbd">3rd vs 3rd</div><div class="btbd">3rd vs 3rd</div><div class="btbd">3rd vs 3rd</div><div class="btbd">3rd vs 3rd</div>
+</div></div>
+<div class="bround"><div class="brndl">Round of 16<small>4–7 Jul</small></div><div class="bslots">
+  <div class="btbd">W1 vs W2</div><div class="btbd">W3 vs W4</div><div class="btbd">W5 vs W6</div><div class="btbd">W7 vs W8</div>
+  <div class="btbd">W9 vs W10</div><div class="btbd">W11 vs W12</div><div class="btbd">W13 vs W14</div><div class="btbd">W15 vs W16</div>
+</div></div>
+<div class="bround"><div class="brndl">Quarter Finals<small>9–11 Jul</small></div><div class="bslots">
+  <div class="btbd">QF 1</div><div class="btbd">QF 2</div><div class="btbd">QF 3</div><div class="btbd">QF 4</div>
+</div></div>
+<div class="bround"><div class="brndl">Semi Finals<small>14–15 Jul</small></div><div class="bslots">
+  <div class="btbd">SF 1</div><div class="btbd">SF 2</div>
+</div></div>
+<div class="bround"><div class="brndl">Final<small>19 Jul · NY/NJ</small></div><div class="bslots" style="justify-content:center">
+  <div class="bslot"><div class="bcard final"><div class="bteam"><span class="bf">🏆</span><span class="bn" style="color:var(--gold);font-weight:600">TBD</span><span class="bo">?</span><span class="bs">–</span></div><div class="bteam"><span class="bf">🏆</span><span class="bn" style="color:var(--gold);font-weight:600">TBD</span><span class="bo">?</span><span class="bs">–</span></div></div><div class="btime" style="color:var(--gold);letter-spacing:1px">WORLD CUP FINAL · 19 JUL 2026</div></div>
+</div></div>
+</div></div>
 </div>
 
-<!-- ══ SWEEP ══════════════════════════════════════════════ -->
+<!-- SWEEP -->
 <div id="sweep" class="page">
-  <div class="sec">All 22 players — two drawn teams each</div>
-  <div class="sweep-grid">
-    <div class="sw-card"><div class="sw-name">Issy W</div><div class="sw-team"><span class="sf">🇿🇦</span> South Africa</div><div class="sw-team"><span class="sf">🇰🇷</span> South Korea</div></div>
-    <div class="sw-card"><div class="sw-name">Cami</div><div class="sw-team"><span class="sf">🇭🇹</span> Haiti</div><div class="sw-team"><span class="sf">🇶🇦</span> Qatar</div></div>
-    <div class="sw-card"><div class="sw-name">Maddy</div><div class="sw-team"><span class="sf">🇵🇹</span> Portugal</div><div class="sw-team"><span class="sf">🇨🇻</span> Cape Verde</div></div>
-    <div class="sw-card"><div class="sw-name">Jem</div><div class="sw-team"><span class="sf">🇵🇦</span> Panama</div><div class="sw-team"><span class="sf">🇨🇩</span> Congo DR</div></div>
-    <div class="sw-card"><div class="sw-name">Mimi</div><div class="sw-team"><span class="sf">🇨🇴</span> Colombia</div><div class="sw-team"><span class="sf">🇬🇭</span> Ghana</div></div>
-    <div class="sw-card"><div class="sw-name">Laina</div><div class="sw-team"><span class="sf">🇪🇨</span> Ecuador</div><div class="sw-team"><span class="sf">🇳🇴</span> Norway</div></div>
-    <div class="sw-card"><div class="sw-name">Shaz</div><div class="sw-team"><span class="sf">🇳🇱</span> Netherlands</div><div class="sw-team"><span class="sf">🇪🇬</span> Egypt</div></div>
-    <div class="sw-card"><div class="sw-name">Zoe</div><div class="sw-team"><span class="sf">🇦🇺</span> Australia</div><div class="sw-team"><span class="sf">🇨🇼</span> Curaçao</div></div>
-    <div class="sw-card"><div class="sw-name">Meg</div><div class="sw-team"><span class="sf">🇧🇦</span> Bosnia &amp; Herz.</div><div class="sw-team"><span class="sf">🇫🇷</span> France</div></div>
-    <div class="sw-card"><div class="sw-name">Ash</div><div class="sw-team"><span class="sf">🇺🇿</span> Uzbekistan</div><div class="sw-team"><span class="sf">🇪🇸</span> Spain</div></div>
-    <div class="sw-card"><div class="sw-name">Gina</div><div class="sw-team"><span class="sf">🇧🇪</span> Belgium</div><div class="sw-team"><span class="sf">🇹🇷</span> Türkiye</div></div>
-    <div class="sw-card"><div class="sw-name">Issy 2</div><div class="sw-team"><span class="sf">🇦🇹</span> Austria</div><div class="sw-team"><span class="sf">🇦🇷</span> Argentina</div></div>
-    <div class="sw-card"><div class="sw-name">Jenna</div><div class="sw-team"><span class="sf">🇸🇳</span> Senegal</div><div class="sw-team"><span class="sf">🇨🇦</span> Canada</div></div>
-    <div class="sw-card"><div class="sw-name">Dobby</div><div class="sw-team"><span class="sf">🇧🇷</span> Brazil</div><div class="sw-team"><span class="sf">🇨🇿</span> Czech Rep.</div></div>
-    <div class="sw-card"><div class="sw-name">Brookey</div><div class="sw-team"><span class="sf">🇩🇿</span> Algeria</div><div class="sw-team"><span class="sf">🇺🇾</span> Uruguay</div></div>
-    <div class="sw-card"><div class="sw-name">Ally</div><div class="sw-team"><span class="sf">🇮🇶</span> Iraq</div><div class="sw-team"><span class="sf">🇭🇷</span> Croatia</div></div>
-    <div class="sw-card"><div class="sw-name">T</div><div class="sw-team"><span class="sf">🇵🇾</span> Paraguay</div><div class="sw-team"><span class="sf">🇲🇦</span> Morocco</div></div>
-    <div class="sw-card"><div class="sw-name">Lia</div><div class="sw-team"><span class="sf">🇮🇷</span> Iran</div><div class="sw-team"><span class="sf">🇩🇪</span> Germany</div></div>
-    <div class="sw-card"><div class="sw-name">Tia</div><div class="sw-team"><span class="sf">🇸🇦</span> Saudi Arabia</div><div class="sw-team"><span class="sf">🇺🇸</span> United States</div></div>
-    <div class="sw-card"><div class="sw-name">Brendan</div><div class="sw-team"><span class="sf">🇹🇳</span> Tunisia</div><div class="sw-team"><span class="sf">🇳🇿</span> New Zealand</div></div>
-    <div class="sw-card"><div class="sw-name">Brad</div><div class="sw-team"><span class="sf">🏴󠁧󠁢󠁳󠁣󠁴󠁿</span> Scotland</div><div class="sw-team"><span class="sf">🇯🇴</span> Jordan</div></div>
-  </div>
+<div class="sec">All 22 players — two drawn teams each</div>
+<div class="sg">
+  <div class="sc2"><div class="sn">Issy W</div><div class="st"><span>🇿🇦</span> South Africa</div><div class="st"><span>🇰🇷</span> South Korea</div></div>
+  <div class="sc2"><div class="sn">Cami</div><div class="st"><span>🇭🇹</span> Haiti</div><div class="st"><span>🇶🇦</span> Qatar</div></div>
+  <div class="sc2"><div class="sn">Maddy</div><div class="st"><span>🇵🇹</span> Portugal</div><div class="st"><span>🇨🇻</span> Cape Verde</div></div>
+  <div class="sc2"><div class="sn">Jem</div><div class="st"><span>🇵🇦</span> Panama</div><div class="st"><span>🇨🇩</span> Congo DR</div></div>
+  <div class="sc2"><div class="sn">Mimi</div><div class="st"><span>🇨🇴</span> Colombia</div><div class="st"><span>🇬🇭</span> Ghana</div></div>
+  <div class="sc2"><div class="sn">Laina</div><div class="st"><span>🇪🇨</span> Ecuador</div><div class="st"><span>🇳🇴</span> Norway</div></div>
+  <div class="sc2"><div class="sn">Shaz</div><div class="st"><span>🇳🇱</span> Netherlands</div><div class="st"><span>🇪🇬</span> Egypt</div></div>
+  <div class="sc2"><div class="sn">Zoe</div><div class="st"><span>🇦🇺</span> Australia</div><div class="st"><span>🇨🇼</span> Curaçao</div></div>
+  <div class="sc2"><div class="sn">Meg</div><div class="st"><span>🇧🇦</span> Bosnia &amp; Herz.</div><div class="st"><span>🇫🇷</span> France</div></div>
+  <div class="sc2"><div class="sn">Ash</div><div class="st"><span>🇺🇿</span> Uzbekistan</div><div class="st"><span>🇪🇸</span> Spain</div></div>
+  <div class="sc2"><div class="sn">Gina</div><div class="st"><span>🇧🇪</span> Belgium</div><div class="st"><span>🇹🇷</span> Türkiye</div></div>
+  <div class="sc2"><div class="sn">Issy 2</div><div class="st"><span>🇦🇹</span> Austria</div><div class="st"><span>🇦🇷</span> Argentina</div></div>
+  <div class="sc2"><div class="sn">Jenna</div><div class="st"><span>🇸🇳</span> Senegal</div><div class="st"><span>🇨🇦</span> Canada</div></div>
+  <div class="sc2"><div class="sn">Dobby</div><div class="st"><span>🇧🇷</span> Brazil</div><div class="st"><span>🇨🇿</span> Czech Rep.</div></div>
+  <div class="sc2"><div class="sn">Brookey</div><div class="st"><span>🇩🇿</span> Algeria</div><div class="st"><span>🇺🇾</span> Uruguay</div></div>
+  <div class="sc2"><div class="sn">Ally</div><div class="st"><span>🇮🇶</span> Iraq</div><div class="st"><span>🇭🇷</span> Croatia</div></div>
+  <div class="sc2"><div class="sn">T</div><div class="st"><span>🇵🇾</span> Paraguay</div><div class="st"><span>🇲🇦</span> Morocco</div></div>
+  <div class="sc2"><div class="sn">Lia</div><div class="st"><span>🇮🇷</span> Iran</div><div class="st"><span>🇩🇪</span> Germany</div></div>
+  <div class="sc2"><div class="sn">Tia</div><div class="st"><span>🇸🇦</span> Saudi Arabia</div><div class="st"><span>🇺🇸</span> United States</div></div>
+  <div class="sc2"><div class="sn">Brendan</div><div class="st"><span>🇹🇳</span> Tunisia</div><div class="st"><span>🇳🇿</span> New Zealand</div></div>
+  <div class="sc2"><div class="sn">Brad</div><div class="st"><span>🏴󠁧󠁢󠁳󠁣󠁴󠁿</span> Scotland</div><div class="st"><span>🇯🇴</span> Jordan</div></div>
+</div>
 </div>
 
-<!-- ══ ODDS ══════════════════════════════════════════════ -->
+<!-- ODDS -->
 <div id="odds" class="page">
-  <div class="sec">Tournament winner — updated odds (BetMGM, Jun 13)</div>
-  <div class="podium">
-    <div class="pod top"><div class="pod-rank">1</div><div class="pod-flag">🇪🇸</div><div class="pod-country">Spain</div><div class="pod-owner">Ash</div><div class="pod-odds">+450</div><div class="pod-lbl">joint fav · BetMGM</div></div>
-    <div class="pod top"><div class="pod-rank">2</div><div class="pod-flag">🇫🇷</div><div class="pod-country">France</div><div class="pod-owner">Meg</div><div class="pod-odds">+450</div><div class="pod-lbl">joint fav · BetMGM</div></div>
-    <div class="pod"><div class="pod-rank">3</div><div class="pod-flag">🏴󠁧󠁢󠁥󠁮󠁧󠁿</div><div class="pod-country">England</div><div class="pod-owner">—</div><div class="pod-odds">+600</div><div class="pod-lbl">BetMGM</div></div>
-    <div class="pod"><div class="pod-rank">4</div><div class="pod-flag">🇧🇷</div><div class="pod-country">Brazil</div><div class="pod-owner">Dobby</div><div class="pod-odds">+600</div><div class="pod-lbl">BetMGM</div></div>
-    <div class="pod"><div class="pod-rank">5</div><div class="pod-flag">🇦🇷</div><div class="pod-country">Argentina</div><div class="pod-owner">Issy 2</div><div class="pod-odds">+900</div><div class="pod-lbl">BetMGM</div></div>
-    <div class="pod"><div class="pod-rank">6</div><div class="pod-flag">🇵🇹</div><div class="pod-country">Portugal</div><div class="pod-owner">Maddy</div><div class="pod-odds">+1100</div><div class="pod-lbl">BetMGM</div></div>
-  </div>
-  <div class="sec">All sweep teams</div>
-  <div class="cb">
-    <table class="odds-tbl">
-      <tr><td>🇪🇸 Spain <span class="ow">Ash</span></td><td>+450</td></tr>
-      <tr><td>🇫🇷 France <span class="ow">Meg</span></td><td>+450</td></tr>
-      <tr><td>🇧🇷 Brazil <span class="ow">Dobby</span></td><td>+600</td></tr>
-      <tr><td>🇦🇷 Argentina <span class="ow">Issy 2</span></td><td>+900</td></tr>
-      <tr><td>🇵🇹 Portugal <span class="ow">Maddy</span></td><td>+1100</td></tr>
-      <tr><td>🇩🇪 Germany <span class="ow">Lia</span></td><td>+1200</td></tr>
-      <tr><td>🇳🇱 Netherlands <span class="ow">Shaz</span></td><td>+1600</td></tr>
-      <tr><td>🇧🇪 Belgium <span class="ow">Gina</span></td><td>+2500</td></tr>
-      <tr><td>🇺🇸 USA <span class="ow">Tia</span></td><td>+5000 ↑ after 3-0 win</td></tr>
-      <tr><td>🇨🇴 Colombia <span class="ow">Mimi</span></td><td>~+3000</td></tr>
-      <tr><td>🇺🇾 Uruguay <span class="ow">Brookey</span></td><td>~+3300</td></tr>
-      <tr><td>🇳🇴 Norway <span class="ow">Laina</span></td><td>~+4000</td></tr>
-      <tr><td>🇸🇳 Senegal <span class="ow">Jenna</span></td><td>~+3300</td></tr>
-      <tr><td>🇭🇷 Croatia <span class="ow">Ally</span></td><td>~+7000</td></tr>
-      <tr><td>🇹🇷 Türkiye <span class="ow">Gina</span></td><td>~+8000</td></tr>
-      <tr><td>🇪🇨 Ecuador <span class="ow">Laina</span></td><td>~+9000</td></tr>
-      <tr><td>🇦🇹 Austria <span class="ow">Issy 2</span></td><td>~+10000</td></tr>
-      <tr><td>🇲🇦 Morocco <span class="ow">T</span></td><td>~+10000</td></tr>
-      <tr><td>🇨🇦 Canada <span class="ow">Jenna</span></td><td>+15000</td></tr>
-      <tr><td>🇦🇺 Australia <span class="ow">Zoe</span></td><td>+50000+</td></tr>
-    </table>
-  </div>
-  <div class="src">Source: Fox Sports, VegasInsider, BetMGM — 13 Jun 2026. American odds. Shift constantly during tournament.</div>
+<div class="sec">Tournament winner favourites — updated Jun 13</div>
+<div class="podium">
+  <div class="pod top"><div class="pod-rk">1</div><div class="pod-fl">🇪🇸</div><div class="pod-cn">Spain</div><div class="pod-ow">Ash</div><div class="pod-od">+450</div><div class="pod-lb">joint fav</div></div>
+  <div class="pod top"><div class="pod-rk">2</div><div class="pod-fl">🇫🇷</div><div class="pod-cn">France</div><div class="pod-ow">Meg</div><div class="pod-od">+450</div><div class="pod-lb">joint fav</div></div>
+  <div class="pod"><div class="pod-rk">3</div><div class="pod-fl">🏴󠁧󠁢󠁥󠁮󠁧󠁿</div><div class="pod-cn">England</div><div class="pod-ow">—</div><div class="pod-od">+600</div><div class="pod-lb">BetMGM</div></div>
+  <div class="pod"><div class="pod-rk">4</div><div class="pod-fl">🇧🇷</div><div class="pod-cn">Brazil</div><div class="pod-ow">Dobby</div><div class="pod-od">+600</div><div class="pod-lb">BetMGM</div></div>
+  <div class="pod"><div class="pod-rk">5</div><div class="pod-fl">🇦🇷</div><div class="pod-cn">Argentina</div><div class="pod-ow">Issy 2</div><div class="pod-od">+900</div><div class="pod-lb">BetMGM</div></div>
+  <div class="pod"><div class="pod-rk">6</div><div class="pod-fl">🇵🇹</div><div class="pod-cn">Portugal</div><div class="pod-ow">Maddy</div><div class="pod-od">+1100</div><div class="pod-lb">BetMGM</div></div>
+</div>
+<div class="cb"><table class="otbl">
+  <tr><td>🇪🇸 Spain <span class="ow2">Ash</span></td><td>+450</td></tr>
+  <tr><td>🇫🇷 France <span class="ow2">Meg</span></td><td>+450</td></tr>
+  <tr><td>🇧🇷 Brazil <span class="ow2">Dobby</span></td><td>+600</td></tr>
+  <tr><td>🇦🇷 Argentina <span class="ow2">Issy 2</span></td><td>+900</td></tr>
+  <tr><td>🇵🇹 Portugal <span class="ow2">Maddy</span></td><td>+1100</td></tr>
+  <tr><td>🇩🇪 Germany <span class="ow2">Lia</span></td><td>+1200</td></tr>
+  <tr><td>🇳🇱 Netherlands <span class="ow2">Shaz</span></td><td>+1600</td></tr>
+  <tr><td>🇧🇪 Belgium <span class="ow2">Gina</span></td><td>+2500</td></tr>
+  <tr><td>🇺🇸 USA <span class="ow2">Tia</span></td><td>+5000</td></tr>
+  <tr><td>🇨🇴 Colombia <span class="ow2">Mimi</span></td><td>~+3000</td></tr>
+  <tr><td>🇺🇾 Uruguay <span class="ow2">Brookey</span></td><td>~+3300</td></tr>
+  <tr><td>🇳🇴 Norway <span class="ow2">Laina</span></td><td>~+4000</td></tr>
+  <tr><td>🇸🇳 Senegal <span class="ow2">Jenna</span></td><td>~+3300</td></tr>
+  <tr><td>🇭🇷 Croatia <span class="ow2">Ally</span></td><td>~+7000</td></tr>
+  <tr><td>🇹🇷 Türkiye <span class="ow2">Gina</span></td><td>~+8000</td></tr>
+  <tr><td>🇪🇨 Ecuador <span class="ow2">Laina</span></td><td>~+9000</td></tr>
+  <tr><td>🇦🇹 Austria <span class="ow2">Issy 2</span></td><td>~+10000</td></tr>
+  <tr><td>🇲🇦 Morocco <span class="ow2">T</span></td><td>~+10000</td></tr>
+  <tr><td>🇨🇦 Canada <span class="ow2">Jenna</span></td><td>+15000</td></tr>
+  <tr><td>🇦🇺 Australia <span class="ow2">Zoe</span></td><td>+50000+</td></tr>
+</table></div>
+<div class="src">Source: Fox Sports, VegasInsider, BetMGM — 13 Jun 2026. American odds format.</div>
 </div>
 
-<!-- ══ BOOT & CARDS ═══════════════════════════════════════ -->
+<!-- BOOT & CARDS -->
 <div id="boot" class="page">
-  <div class="sec">Golden Boot — goals scored so far</div>
-  <div class="cb">
-    <div class="boot-row"><div class="boot-rank">⚽</div><div><div class="boot-name">Folarin Balogun</div><div class="boot-nat">🇺🇸 USA · <strong style="color:var(--gold)">Tia's team</strong></div></div><div class="boot-goals">2 goals</div></div>
-    <div class="boot-row"><div class="boot-rank">⚽</div><div><div class="boot-name">Julián Quiñones</div><div class="boot-nat">🇲🇽 Mexico · no sweep owner</div></div><div class="boot-goals">1 goal</div></div>
-    <div class="boot-row"><div class="boot-rank">⚽</div><div><div class="boot-name">Raúl Jiménez</div><div class="boot-nat">🇲🇽 Mexico · no sweep owner</div></div><div class="boot-goals">1 goal</div></div>
-    <div class="boot-row"><div class="boot-rank">⚽</div><div><div class="boot-name">In-Beom Hwang</div><div class="boot-nat">🇰🇷 South Korea · <strong style="color:var(--gold)">Issy W's team</strong></div></div><div class="boot-goals">1 goal</div></div>
-    <div class="boot-row"><div class="boot-rank">⚽</div><div><div class="boot-name">Hyeon-Gyu Oh</div><div class="boot-nat">🇰🇷 South Korea · <strong style="color:var(--gold)">Issy W's team</strong></div></div><div class="boot-goals">1 goal</div></div>
-    <div class="boot-row"><div class="boot-rank">⚽</div><div><div class="boot-name">Ladislav Krejci</div><div class="boot-nat">🇨🇿 Czech Republic · <strong style="color:var(--gold)">Dobby's team</strong></div></div><div class="boot-goals">1 goal</div></div>
-    <div class="boot-row"><div class="boot-rank">⚽</div><div><div class="boot-name">Jovo Lukić</div><div class="boot-nat">🇧🇦 Bosnia · <strong style="color:var(--gold)">Meg's team</strong></div></div><div class="boot-goals">1 goal</div></div>
-    <div class="boot-row"><div class="boot-rank">⚽</div><div><div class="boot-name">Cyle Larin</div><div class="boot-nat">🇨🇦 Canada · <strong style="color:var(--gold)">Jenna's team</strong></div></div><div class="boot-goals">1 goal</div></div>
-  </div>
-  <div class="src" style="margin-bottom:16px">Source: Sky Sports, ESPN, SBS, CBS Sports, Fox Sports — 13 Jun 2026</div>
+<div class="sec">Golden Boot — goals scored so far (16 matches)</div>
+<div class="cb">
+  <div class="br"><div class="brk">⚽</div><div><div class="bname">Folarin Balogun</div><div class="bnat">🇺🇸 USA · <strong style="color:var(--gold)">Tia</strong></div></div><div class="bgoal">2 goals</div></div>
+  <div class="br"><div class="brk">⚽</div><div><div class="bname">Kai Havertz</div><div class="bnat">🇩🇪 Germany · <strong style="color:var(--gold)">Lia</strong></div></div><div class="bgoal">2 goals</div></div>
+  <div class="br"><div class="brk">⚽</div><div><div class="bname">Yasin Ayari</div><div class="bnat">🇸🇪 Sweden · no sweep owner</div></div><div class="bgoal">2 goals</div></div>
+  <div class="br"><div class="brk">⚽</div><div><div class="bname">Julián Quiñones</div><div class="bnat">🇲🇽 Mexico · no sweep owner</div></div><div class="bgoal">1 goal</div></div>
+  <div class="br"><div class="brk">⚽</div><div><div class="bname">Raúl Jiménez</div><div class="bnat">🇲🇽 Mexico · no sweep owner</div></div><div class="bgoal">1 goal</div></div>
+  <div class="br"><div class="brk">⚽</div><div><div class="bname">In-Beom Hwang</div><div class="bnat">🇰🇷 South Korea · <strong style="color:var(--gold)">Issy W</strong></div></div><div class="bgoal">1 goal</div></div>
+  <div class="br"><div class="brk">⚽</div><div><div class="bname">Hyeon-Gyu Oh</div><div class="bnat">🇰🇷 South Korea · <strong style="color:var(--gold)">Issy W</strong></div></div><div class="bgoal">1 goal</div></div>
+  <div class="br"><div class="brk">⚽</div><div><div class="bname">Ladislav Krejci</div><div class="bnat">🇨🇿 Czech Republic · <strong style="color:var(--gold)">Dobby</strong></div></div><div class="bgoal">1 goal</div></div>
+  <div class="br"><div class="brk">⚽</div><div><div class="bname">Jovo Lukić</div><div class="bnat">🇧🇦 Bosnia · <strong style="color:var(--gold)">Meg</strong></div></div><div class="bgoal">1 goal</div></div>
+  <div class="br"><div class="brk">⚽</div><div><div class="bname">Cyle Larin</div><div class="bnat">🇨🇦 Canada · <strong style="color:var(--gold)">Jenna</strong></div></div><div class="bgoal">1 goal</div></div>
+  <div class="br"><div class="brk">⚽</div><div><div class="bname">Gio Reyna</div><div class="bnat">🇺🇸 USA · <strong style="color:var(--gold)">Tia</strong></div></div><div class="bgoal">1 goal</div></div>
+  <div class="br"><div class="brk">⚽</div><div><div class="bname">Breel Embolo</div><div class="bnat">🇨🇭 Switzerland · no sweep owner</div></div><div class="bgoal">1 goal</div></div>
+  <div class="br"><div class="brk">⚽</div><div><div class="bname">Boualem Khoukhi</div><div class="bnat">🇶🇦 Qatar · <strong style="color:var(--gold)">Cami</strong></div></div><div class="bgoal">1 goal</div></div>
+  <div class="br"><div class="brk">⚽</div><div><div class="bname">Ismael Saibari</div><div class="bnat">🇲🇦 Morocco · <strong style="color:var(--gold)">T</strong></div></div><div class="bgoal">1 goal</div></div>
+  <div class="br"><div class="brk">⚽</div><div><div class="bname">Vinicius Jr</div><div class="bnat">🇧🇷 Brazil · <strong style="color:var(--gold)">Dobby</strong></div></div><div class="bgoal">1 goal</div></div>
+  <div class="br"><div class="brk">⚽</div><div><div class="bname">John McGinn</div><div class="bnat">🏴󠁧󠁢󠁳󠁣󠁴󠁿 Scotland · <strong style="color:var(--gold)">Brad</strong></div></div><div class="bgoal">1 goal</div></div>
+  <div class="br"><div class="brk">⚽</div><div><div class="bname">Nestory Irankunda</div><div class="bnat">🇦🇺 Australia · <strong style="color:var(--gold)">Zoe</strong></div></div><div class="bgoal">1 goal</div></div>
+  <div class="br"><div class="brk">⚽</div><div><div class="bname">Connor Metcalfe</div><div class="bnat">🇦🇺 Australia · <strong style="color:var(--gold)">Zoe</strong></div></div><div class="bgoal">1 goal</div></div>
+  <div class="br"><div class="brk">⚽</div><div><div class="bname">Livano Comenencia</div><div class="bnat">🇨🇼 Curaçao · <strong style="color:var(--gold)">Zoe</strong></div></div><div class="bgoal">1 goal</div></div>
+  <div class="br"><div class="brk">⚽</div><div><div class="bname">Virgil van Dijk</div><div class="bnat">🇳🇱 Netherlands · <strong style="color:var(--gold)">Shaz</strong></div></div><div class="bgoal">1 goal</div></div>
+  <div class="br"><div class="brk">⚽</div><div><div class="bname">Crysencio Summerville</div><div class="bnat">🇳🇱 Netherlands · <strong style="color:var(--gold)">Shaz</strong></div></div><div class="bgoal">1 goal</div></div>
+</div>
+<div class="src" style="margin-bottom:16px">Source: NBC Sports, ESPN, RotoWire, CBS Sports — 17 Jun 2026</div>
 
-  <div class="sec">Pre-tournament Golden Boot favourites</div>
-  <div class="cb">
-    <div class="boot-row"><div class="boot-rank">1</div><div><div class="boot-name">Kylian Mbappé</div><div class="boot-nat">🇫🇷 France · <strong style="color:var(--gold)">Meg's team</strong></div></div><div class="boot-goals">+550 fav</div></div>
-    <div class="boot-row"><div class="boot-rank">2</div><div><div class="boot-name">Harry Kane</div><div class="boot-nat">🏴󠁧󠁢󠁥󠁮󠁧󠁿 England</div></div><div class="boot-goals">+650</div></div>
-    <div class="boot-row"><div class="boot-rank">3</div><div><div class="boot-name">Lionel Messi</div><div class="boot-nat">🇦🇷 Argentina · <strong style="color:var(--gold)">Issy 2's team</strong></div></div><div class="boot-goals">+1100</div></div>
-    <div class="boot-row"><div class="boot-rank">4</div><div><div class="boot-name">Erling Haaland</div><div class="boot-nat">🇳🇴 Norway · <strong style="color:var(--gold)">Laina's team</strong></div></div><div class="boot-goals">+1300</div></div>
-    <div class="boot-row"><div class="boot-rank">5</div><div><div class="boot-name">Lamine Yamal</div><div class="boot-nat">🇪🇸 Spain · <strong style="color:var(--gold)">Ash's team</strong></div></div><div class="boot-goals">contender</div></div>
-  </div>
-
-  <div class="sec">Cards tracker</div>
-  <div class="cb">
-    <div class="match-sub">Match 1 — Mexico 2–0 South Africa · Thu 12 Jun · Group A</div>
-    <div class="st-row"><span class="st-l">B. Gutiérrez (Mexico)</span><span class="st-r"><span class="yc"></span> Yellow · 23'</span></div>
-    <div class="st-row"><span class="st-l">N. Sibisi (South Africa) — <strong style="color:var(--gold)">Issy W</strong></span><span class="st-r"><span class="yc"></span> Yellow · 74'</span></div>
-    <div class="st-row"><span class="st-l">Sithole (South Africa) — <strong style="color:var(--gold)">Issy W</strong></span><span class="st-r"><span class="rc"></span> Red · denied goal</span></div>
-    <div class="st-row"><span class="st-l">T. Zwane (South Africa) — <strong style="color:var(--gold)">Issy W</strong></span><span class="st-r"><span class="rc"></span> Red · 84'</span></div>
-    <div class="st-row"><span class="st-l">C. Montes (Mexico)</span><span class="st-r"><span class="rc"></span> Red · 90+2'</span></div>
-  </div>
-  <div class="cb">
-    <div class="match-sub">Match 2 — South Korea 2–1 Czech Republic · Thu 12 Jun · Group A</div>
-    <div class="st-row"><span class="st-l">Lee Gi-hyuk (South Korea) — <strong style="color:var(--gold)">Issy W</strong></span><span class="st-r"><span class="yc"></span> Yellow · late</span></div>
-  </div>
-  <div class="cb">
-    <div class="match-sub">Match 3 — Canada 1–1 Bosnia · Fri 13 Jun · Group B</div>
-    <div class="st-row"><span class="st-l">Alastair Johnson (Canada) — <strong style="color:var(--gold)">Jenna</strong></span><span class="st-r"><span class="yc"></span> Yellow · 11'</span></div>
-    <div class="st-row"><span class="st-l">Jovo Lukić (Bosnia) — <strong style="color:var(--gold)">Meg</strong></span><span class="st-r"><span class="yc"></span> Yellow · 47'</span></div>
-    <div class="st-row"><span class="st-l">Ermedin Demirović (Bosnia) — <strong style="color:var(--gold)">Meg</strong></span><span class="st-r"><span class="yc"></span> Yellow · 47'</span></div>
-    <div class="st-row"><span class="st-l">Luc Rollet de Fougerolles (Canada) — <strong style="color:var(--gold)">Jenna</strong></span><span class="st-r"><span class="yc"></span> Yellow · 53'</span></div>
-  </div>
-  <div class="src">3 reds in match 1 is a World Cup record. Source: Fox Sports, CBS Sports, ESPN, SBS.</div>
+<div class="sec">Cards tracker — notable incidents</div>
+<div class="cb">
+  <div class="ms">Match 1 — Mexico 2–0 South Africa · Thu 11 Jun · Group A</div>
+  <div class="str"><span class="stl">B. Gutiérrez (Mexico)</span><span class="strv"><span class="yc"></span> Yellow · 23'</span></div>
+  <div class="str"><span class="stl">N. Sibisi (South Africa) — <strong style="color:var(--gold)">Issy W</strong></span><span class="strv"><span class="yc"></span> Yellow · 74'</span></div>
+  <div class="str"><span class="stl">Sithole (South Africa) — <strong style="color:var(--gold)">Issy W</strong></span><span class="strv"><span class="rc2"></span> Red · denied goal</span></div>
+  <div class="str"><span class="stl">T. Zwane (South Africa) — <strong style="color:var(--gold)">Issy W</strong></span><span class="strv"><span class="rc2"></span> Red · 84'</span></div>
+  <div class="str"><span class="stl">C. Montes (Mexico)</span><span class="strv"><span class="rc2"></span> Red · 90+2'</span></div>
+</div>
+<div class="cb">
+  <div class="ms">Match 3 — Canada 1–1 Bosnia · Fri 12 Jun · Group B</div>
+  <div class="str"><span class="stl">Alastair Johnson (Canada) — <strong style="color:var(--gold)">Jenna</strong></span><span class="strv"><span class="yc"></span> Yellow · 11'</span></div>
+  <div class="str"><span class="stl">Jovo Lukić (Bosnia) — <strong style="color:var(--gold)">Meg</strong></span><span class="strv"><span class="yc"></span> Yellow · 47'</span></div>
+  <div class="str"><span class="stl">Ermedin Demirović (Bosnia) — <strong style="color:var(--gold)">Meg</strong></span><span class="strv"><span class="yc"></span> Yellow · 47'</span></div>
+  <div class="str"><span class="stl">Luc Rollet de Fougerolles (Canada) — <strong style="color:var(--gold)">Jenna</strong></span><span class="strv"><span class="yc"></span> Yellow · 53'</span></div>
+</div>
+<div class="src">3 reds in match 1 is a World Cup record. Source: Fox Sports, CBS Sports, ESPN, SBS.</div>
 </div>
 
 </div><!-- /content -->
-
-<div class="footer">
-  Hawks World Cup 2026 Sweep &nbsp;·&nbsp; All times AEST (Brisbane) &nbsp;·&nbsp;
-  Live scores via ESPN API · Odds: BetMGM / VegasInsider · Stats: Fox Sports, CBS Sports, SBS
+<div class="footer">Hawks World Cup 2026 Sweep · All times AEST (Brisbane) · Updated daily<br>Sources: CBS Sports · ESPN · Fox Sports · Yahoo Sports · NBC Sports · SBS · RotoWire · BetMGM</div>
 </div>
-
-</div><!-- /wrap -->
-
 <script>
-// ── SWEEP OWNERSHIP MAP ────────────────────────────────
-const SWEEP = {
-  'South Africa':'Issy W','Korea Republic':'Issy W','South Korea':'Issy W',
-  'Haiti':'Cami','Qatar':'Cami',
-  'Portugal':'Maddy','Cape Verde':'Maddy',
-  'Panama':'Jem','DR Congo':'Jem','Congo DR':'Jem',
-  'Colombia':'Mimi','Ghana':'Mimi',
-  'Ecuador':'Laina','Norway':'Laina',
-  'Netherlands':'Shaz','Egypt':'Shaz',
-  'Australia':'Zoe','Curaçao':'Zoe','Curacao':'Zoe',
-  'Bosnia and Herzegovina':'Meg','Bosnia & Herzegovina':'Meg','France':'Meg',
-  'Uzbekistan':'Ash','Spain':'Ash',
-  'Belgium':'Gina','Turkey':'Gina','Türkiye':'Gina',
-  'Austria':'Issy 2','Argentina':'Issy 2',
-  'Senegal':'Jenna','Canada':'Jenna',
-  'Brazil':'Dobby','Czech Republic':'Dobby','Czechia':'Dobby',
-  'Algeria':'Brookey','Uruguay':'Brookey',
-  'Iraq':'Ally','Croatia':'Ally',
-  'Paraguay':'T','Morocco':'T',
-  'Iran':'Lia','Germany':'Lia',
-  'Saudi Arabia':'Tia','United States':'Tia','USA':'Tia',
-  'Tunisia':'Brendan','New Zealand':'Brendan',
-  'Scotland':'Brad','Jordan':'Brad',
-};
-
-function getOwner(name) {
-  for (const [k, v] of Object.entries(SWEEP)) {
-    if (name && name.toLowerCase().includes(k.toLowerCase())) return v;
-  }
-  return null;
-}
-
-// ── FLAG MAP (ISO2 → emoji) ────────────────────────────
-const FLAGS = {
-  'MX':'🇲🇽','ZA':'🇿🇦','KR':'🇰🇷','CZ':'🇨🇿','CA':'🇨🇦','BA':'🇧🇦',
-  'QA':'🇶🇦','CH':'🇨🇭','BR':'🇧🇷','MA':'🇲🇦','HT':'🇭🇹','GB-SCT':'🏴󠁧󠁢󠁳󠁣󠁴󠁿',
-  'US':'🇺🇸','PY':'🇵🇾','AU':'🇦🇺','TR':'🇹🇷','DE':'🇩🇪','CW':'🇨🇼',
-  'CI':'🇨🇮','NL':'🇳🇱','EC':'🇪🇨','JP':'🇯🇵','SE':'🇸🇪','TN':'🇹🇳',
-  'ES':'🇪🇸','CV':'🇨🇻','BE':'🇧🇪','SA':'🇸🇦','IR':'🇮🇷','UY':'🇺🇾',
-  'NZ':'🇳🇿','EG':'🇪🇬','FR':'🇫🇷','SN':'🇸🇳','IQ':'🇮🇶','NO':'🇳🇴',
-  'AR':'🇦🇷','DZ':'🇩🇿','AT':'🇦🇹','JO':'🇯🇴','PT':'🇵🇹','CD':'🇨🇩',
-  'UZ':'🇺🇿','CO':'🇨🇴','GH':'🇬🇭','PA':'🇵🇦','HR':'🇭🇷','GB-ENG':'🏴󠁧󠁢󠁥󠁮󠁧󠁿',
-};
-function flag(abbr) { return FLAGS[abbr] || '🏳️'; }
-
-// ── GROUP SETUP (static — groups don't change) ─────────
-const GROUP_DATA = [
-  { letter:'A', teams:[
-    {name:'Mexico',         abbr:'MX'}, {name:'South Korea',      abbr:'KR'},
-    {name:'South Africa',   abbr:'ZA'}, {name:'Czech Republic',   abbr:'CZ'},
-  ]},
-  { letter:'B', teams:[
-    {name:'Canada',         abbr:'CA'}, {name:'Bosnia & Herzegovina', abbr:'BA'},
-    {name:'Qatar',          abbr:'QA'}, {name:'Switzerland',      abbr:'CH'},
-  ]},
-  { letter:'C', teams:[
-    {name:'Brazil',         abbr:'BR'}, {name:'Morocco',          abbr:'MA'},
-    {name:'Haiti',          abbr:'HT'}, {name:'Scotland',         abbr:'GB-SCT'},
-  ]},
-  { letter:'D', teams:[
-    {name:'United States',  abbr:'US'}, {name:'Paraguay',         abbr:'PY'},
-    {name:'Australia',      abbr:'AU'}, {name:'Türkiye',          abbr:'TR'},
-  ]},
-  { letter:'E', teams:[
-    {name:'Germany',        abbr:'DE'}, {name:'Curaçao',          abbr:'CW'},
-    {name:'Ivory Coast',    abbr:'CI'}, {name:'Ecuador',          abbr:'EC'},
-  ]},
-  { letter:'F', teams:[
-    {name:'Netherlands',    abbr:'NL'}, {name:'Japan',            abbr:'JP'},
-    {name:'Sweden',         abbr:'SE'}, {name:'Tunisia',          abbr:'TN'},
-  ]},
-  { letter:'G', teams:[
-    {name:'Belgium',        abbr:'BE'}, {name:'Egypt',            abbr:'EG'},
-    {name:'Iran',           abbr:'IR'}, {name:'New Zealand',      abbr:'NZ'},
-  ]},
-  { letter:'H', teams:[
-    {name:'Spain',          abbr:'ES'}, {name:'Cape Verde',       abbr:'CV'},
-    {name:'Saudi Arabia',   abbr:'SA'}, {name:'Uruguay',          abbr:'UY'},
-  ]},
-  { letter:'I', teams:[
-    {name:'France',         abbr:'FR'}, {name:'Senegal',          abbr:'SN'},
-    {name:'Iraq',           abbr:'IQ'}, {name:'Norway',           abbr:'NO'},
-  ]},
-  { letter:'J', teams:[
-    {name:'Argentina',      abbr:'AR'}, {name:'Algeria',          abbr:'DZ'},
-    {name:'Austria',        abbr:'AT'}, {name:'Jordan',           abbr:'JO'},
-  ]},
-  { letter:'K', teams:[
-    {name:'Portugal',       abbr:'PT'}, {name:'DR Congo',         abbr:'CD'},
-    {name:'Uzbekistan',     abbr:'UZ'}, {name:'Colombia',         abbr:'CO'},
-  ]},
-  { letter:'L', teams:[
-    {name:'England',        abbr:'GB-ENG'},{name:'Croatia',       abbr:'HR'},
-    {name:'Ghana',          abbr:'GH'}, {name:'Panama',           abbr:'PA'},
-  ]},
-];
-
-// known standings after 4 matches
-const STANDINGS = {
-  'Mexico':3,'South Korea':3,'South Africa':0,'Czech Republic':0,
-  'Canada':1,'Bosnia & Herzegovina':1,'Qatar':0,'Switzerland':0,
-  'United States':3,'Paraguay':0,
-};
-
-// ── FIXTURES (all group-stage matches with AEST times) ─
-const ALL_FIXTURES = [
-  // completed
-  { date:'Thu 12 Jun', home:'Mexico',       homeA:'MX', away:'South Africa',       awayA:'ZA', aest:'4:00 am',  hs:2, as:0, ft:true,  group:'A', scorers:'Quiñones 9\' · Jiménez 67\'' },
-  { date:'Thu 12 Jun', home:'South Korea',  homeA:'KR', away:'Czech Republic',     awayA:'CZ', aest:'7:00 am',  hs:2, as:1, ft:true,  group:'A', scorers:'Hwang In-Beom 67\' · Oh Hyeon-Gyu 80\' / Krejci 59\'' },
-  { date:'Fri 13 Jun', home:'Canada',       homeA:'CA', away:'Bosnia & Herzegovina',awayA:'BA', aest:'5:00 am',  hs:1, as:1, ft:true,  group:'B', scorers:'Larin 78\' / Lukić 21\'' },
-  { date:'Fri 13 Jun', home:'United States',homeA:'US', away:'Paraguay',           awayA:'PY', aest:'11:00 am', hs:3, as:0, ft:true,  group:'D', scorers:'OG Bobadilla 7\' · Balogun 31\' · Balogun 2nd goal / –' },
-  // upcoming
-  { date:'Sat 14 Jun', home:'Qatar',        homeA:'QA', away:'Switzerland',        awayA:'CH', aest:'5:00 am',  group:'B' },
-  { date:'Sun 15 Jun', home:'Brazil',       homeA:'BR', away:'Morocco',            awayA:'MA', aest:'8:00 am',  group:'C' },
-  { date:'Sun 15 Jun', home:'Haiti',        homeA:'HT', away:'Scotland',           awayA:'GB-SCT', aest:'11:00 am', group:'C' },
-  { date:'Sun 15 Jun', home:'Australia',    homeA:'AU', away:'Türkiye',            awayA:'TR', aest:'2:00 pm',  group:'D' },
-  { date:'Mon 16 Jun', home:'Germany',      homeA:'DE', away:'Curaçao',            awayA:'CW', aest:'3:00 am',  group:'E' },
-  { date:'Mon 16 Jun', home:'Netherlands',  homeA:'NL', away:'Japan',              awayA:'JP', aest:'6:00 am',  group:'F' },
-  { date:'Mon 16 Jun', home:'Ivory Coast',  homeA:'CI', away:'Ecuador',            awayA:'EC', aest:'9:00 am',  group:'E' },
-  { date:'Mon 16 Jun', home:'Sweden',       homeA:'SE', away:'Tunisia',            awayA:'TN', aest:'12:00 pm', group:'F' },
-  { date:'Tue 17 Jun', home:'Spain',        homeA:'ES', away:'Cape Verde',         awayA:'CV', aest:'2:00 am',  group:'H' },
-  { date:'Tue 17 Jun', home:'Belgium',      homeA:'BE', away:'Egypt',              awayA:'EG', aest:'5:00 am',  group:'G' },
-  { date:'Tue 17 Jun', home:'Saudi Arabia', homeA:'SA', away:'Uruguay',            awayA:'UY', aest:'8:00 am',  group:'H' },
-  { date:'Tue 17 Jun', home:'Iran',         homeA:'IR', away:'New Zealand',        awayA:'NZ', aest:'11:00 am', group:'G' },
-  { date:'Wed 18 Jun', home:'France',       homeA:'FR', away:'Senegal',            awayA:'SN', aest:'5:00 am',  group:'I' },
-  { date:'Wed 18 Jun', home:'Iraq',         homeA:'IQ', away:'Norway',             awayA:'NO', aest:'8:00 am',  group:'I' },
-  { date:'Wed 18 Jun', home:'Argentina',    homeA:'AR', away:'Algeria',            awayA:'DZ', aest:'11:00 am', group:'J' },
-  { date:'Wed 18 Jun', home:'Austria',      homeA:'AT', away:'Jordan',             awayA:'JO', aest:'2:00 pm',  group:'J' },
-  { date:'Thu 19 Jun', home:'Portugal',     homeA:'PT', away:'DR Congo',           awayA:'CD', aest:'3:00 am',  group:'K' },
-  { date:'Thu 19 Jun', home:'England',      homeA:'GB-ENG', away:'Croatia',        awayA:'HR', aest:'6:00 am',  group:'L' },
-  { date:'Thu 19 Jun', home:'Ghana',        homeA:'GH', away:'Panama',             awayA:'PA', aest:'9:00 am',  group:'L' },
-  { date:'Thu 19 Jun', home:'Uzbekistan',   homeA:'UZ', away:'Colombia',           awayA:'CO', aest:'12:00 pm', group:'K' },
-  { date:'Fri 20 Jun', home:'Czech Republic',homeA:'CZ', away:'South Africa',      awayA:'ZA', aest:'2:00 am',  group:'A' },
-  { date:'Fri 20 Jun', home:'Switzerland',  homeA:'CH', away:'Bosnia & Herzegovina',awayA:'BA', aest:'5:00 am',  group:'B' },
-  { date:'Fri 20 Jun', home:'Canada',       homeA:'CA', away:'Qatar',              awayA:'QA', aest:'8:00 am',  group:'B' },
-  { date:'Fri 20 Jun', home:'Mexico',       homeA:'MX', away:'South Korea',        awayA:'KR', aest:'11:00 am', group:'A' },
-  { date:'Sat 21 Jun', home:'Scotland',     homeA:'GB-SCT', away:'Morocco',        awayA:'MA', aest:'8:00 am',  group:'C' },
-  { date:'Sat 21 Jun', home:'United States',homeA:'US', away:'Australia',          awayA:'AU', aest:'5:00 am',  group:'D' },
-  { date:'Sat 21 Jun', home:'Brazil',       homeA:'BR', away:'Haiti',              awayA:'HT', aest:'10:30 am', group:'C' },
-  { date:'Sat 21 Jun', home:'Türkiye',      homeA:'TR', away:'Paraguay',           awayA:'PY', aest:'1:00 pm',  group:'D' },
-  { date:'Sun 22 Jun', home:'Netherlands',  homeA:'NL', away:'Sweden',             awayA:'SE', aest:'3:00 am',  group:'F' },
-  { date:'Sun 22 Jun', home:'Germany',      homeA:'DE', away:'Ivory Coast',        awayA:'CI', aest:'6:00 am',  group:'E' },
-  { date:'Sun 22 Jun', home:'Ecuador',      homeA:'EC', away:'Curaçao',            awayA:'CW', aest:'9:00 am',  group:'E' },
-  { date:'Sun 22 Jun', home:'Tunisia',      homeA:'TN', away:'Japan',              awayA:'JP', aest:'12:00 pm', group:'F' },
-  { date:'Mon 23 Jun', home:'Spain',        homeA:'ES', away:'Saudi Arabia',       awayA:'SA', aest:'2:00 am',  group:'H' },
-  { date:'Mon 23 Jun', home:'Belgium',      homeA:'BE', away:'Iran',               awayA:'IR', aest:'5:00 am',  group:'G' },
-  { date:'Mon 23 Jun', home:'Uruguay',      homeA:'UY', away:'Cape Verde',         awayA:'CV', aest:'8:00 am',  group:'H' },
-  { date:'Mon 23 Jun', home:'New Zealand',  homeA:'NZ', away:'Egypt',              awayA:'EG', aest:'11:00 am', group:'G' },
-  { date:'Tue 24 Jun', home:'Argentina',    homeA:'AR', away:'Austria',            awayA:'AT', aest:'3:00 am',  group:'J' },
-  { date:'Tue 24 Jun', home:'France',       homeA:'FR', away:'Iraq',               awayA:'IQ', aest:'7:00 am',  group:'I' },
-  { date:'Tue 24 Jun', home:'Norway',       homeA:'NO', away:'Senegal',            awayA:'SN', aest:'10:00 am', group:'I' },
-  { date:'Tue 24 Jun', home:'Jordan',       homeA:'JO', away:'Algeria',            awayA:'DZ', aest:'1:00 pm',  group:'J' },
-  { date:'Wed 25 Jun', home:'Portugal',     homeA:'PT', away:'Uzbekistan',         awayA:'UZ', aest:'3:00 am',  group:'K' },
-  { date:'Wed 25 Jun', home:'England',      homeA:'GB-ENG', away:'Ghana',          awayA:'GH', aest:'6:00 am',  group:'L' },
-  { date:'Wed 25 Jun', home:'Panama',       homeA:'PA', away:'Croatia',            awayA:'HR', aest:'9:00 am',  group:'L' },
-  { date:'Wed 25 Jun', home:'Colombia',     homeA:'CO', away:'DR Congo',           awayA:'CD', aest:'12:00 pm', group:'K' },
-  { date:'Thu 26 Jun', home:'Switzerland',  homeA:'CH', away:'Canada',             awayA:'CA', aest:'5:00 am',  group:'B' },
-  { date:'Thu 26 Jun', home:'Bosnia & Herzegovina',homeA:'BA', away:'Qatar',       awayA:'QA', aest:'5:00 am',  group:'B' },
-  { date:'Thu 26 Jun', home:'Scotland',     homeA:'GB-SCT', away:'Brazil',         awayA:'BR', aest:'8:00 am',  group:'C' },
-  { date:'Thu 26 Jun', home:'Morocco',      homeA:'MA', away:'Haiti',              awayA:'HT', aest:'8:00 am',  group:'C' },
-  { date:'Thu 26 Jun', home:'Czech Republic',homeA:'CZ', away:'Mexico',            awayA:'MX', aest:'11:00 am', group:'A' },
-  { date:'Thu 26 Jun', home:'South Africa', homeA:'ZA', away:'South Korea',        awayA:'KR', aest:'11:00 am', group:'A' },
-  { date:'Fri 27 Jun', home:'Ecuador',      homeA:'EC', away:'Germany',            awayA:'DE', aest:'6:00 am',  group:'E' },
-  { date:'Fri 27 Jun', home:'Curaçao',      homeA:'CW', away:'Ivory Coast',        awayA:'CI', aest:'6:00 am',  group:'E' },
-  { date:'Fri 27 Jun', home:'Japan',        homeA:'JP', away:'Sweden',             awayA:'SE', aest:'9:00 am',  group:'F' },
-  { date:'Fri 27 Jun', home:'Tunisia',      homeA:'TN', away:'Netherlands',        awayA:'NL', aest:'9:00 am',  group:'F' },
-  { date:'Fri 27 Jun', home:'Türkiye',      homeA:'TR', away:'United States',      awayA:'US', aest:'12:00 pm', group:'D' },
-  { date:'Fri 27 Jun', home:'Paraguay',     homeA:'PY', away:'Australia',          awayA:'AU', aest:'12:00 pm', group:'D' },
-  { date:'Sat 28 Jun', home:'Norway',       homeA:'NO', away:'France',             awayA:'FR', aest:'5:00 am',  group:'I' },
-  { date:'Sat 28 Jun', home:'Senegal',      homeA:'SN', away:'Iraq',               awayA:'IQ', aest:'5:00 am',  group:'I' },
-  { date:'Sat 28 Jun', home:'Cape Verde',   homeA:'CV', away:'Saudi Arabia',       awayA:'SA', aest:'10:00 am', group:'H' },
-  { date:'Sat 28 Jun', home:'Uruguay',      homeA:'UY', away:'Spain',              awayA:'ES', aest:'10:00 am', group:'H' },
-  { date:'Sat 28 Jun', home:'Egypt',        homeA:'EG', away:'Iran',               awayA:'IR', aest:'1:00 pm',  group:'G' },
-  { date:'Sat 28 Jun', home:'New Zealand',  homeA:'NZ', away:'Belgium',            awayA:'BE', aest:'1:00 pm',  group:'G' },
-  { date:'Sun 29 Jun', home:'Panama',       homeA:'PA', away:'England',            awayA:'GB-ENG', aest:'7:00 am',  group:'L' },
-  { date:'Sun 29 Jun', home:'Croatia',      homeA:'HR', away:'Ghana',              awayA:'GH', aest:'7:00 am',  group:'L' },
-  { date:'Sun 29 Jun', home:'Colombia',     homeA:'CO', away:'Portugal',           awayA:'PT', aest:'9:30 am',  group:'K' },
-  { date:'Sun 29 Jun', home:'DR Congo',     homeA:'CD', away:'Uzbekistan',         awayA:'UZ', aest:'9:30 am',  group:'K' },
-  { date:'Sun 29 Jun', home:'Algeria',      homeA:'DZ', away:'Austria',            awayA:'AT', aest:'11:00 am', group:'J' },
-  { date:'Sun 29 Jun', home:'Jordan',       homeA:'JO', away:'Argentina',          awayA:'AR', aest:'11:00 am', group:'J' },
-];
-
-// ── ESPN LIVE SCORES API ───────────────────────────────
-// Uses ESPN's unofficial public API — no key needed, CORS via proxy
-const ESPN_URL = 'https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard';
-
-async function fetchLiveScores() {
-  const r = await fetch(ESPN_URL + '?dates=' + getTodayESPN(), { cache: 'no-store' });
-  if (!r.ok) throw new Error('ESPN API returned ' + r.status);
-  return r.json();
-}
-
-function getTodayESPN() {
-  // ESPN wants YYYYMMDD in ET
-  const d = new Date();
-  return d.getUTCFullYear().toString()
-    + String(d.getUTCMonth()+1).padStart(2,'0')
-    + String(d.getUTCDate()).padStart(2,'0');
-}
-
-function parseESPN(data) {
-  const events = data?.events || [];
-  return events.map(e => {
-    const comps = e.competitions?.[0] || {};
-    const teams = comps.competitors || [];
-    const home  = teams.find(t => t.homeAway === 'home') || teams[0] || {};
-    const away  = teams.find(t => t.homeAway === 'away') || teams[1] || {};
-    const status = e.status?.type?.name || '';
-    const clock  = e.status?.displayClock || '';
-    const period = e.status?.period || 0;
-    return {
-      id: e.id,
-      homeName:  home.team?.displayName || '',
-      homeScore: home.score || '–',
-      homeAbbr:  home.team?.abbreviation || '',
-      awayName:  away.team?.displayName || '',
-      awayScore: away.score || '–',
-      awayAbbr:  away.team?.abbreviation || '',
-      status,   // 'STATUS_SCHEDULED' | 'STATUS_IN_PROGRESS' | 'STATUS_FINAL'
-      clock,
-      period,
-      date:      e.date,
-    };
-  });
-}
-
-// ── RENDER LIVE SCORES ─────────────────────────────────
-function renderLive(games, error) {
-  const c = document.getElementById('live-scores-container');
-  const s = document.getElementById('live-src');
-  if (error) {
-    // Fall back to showing our known completed matches
-    c.innerHTML = renderFallbackResults();
-    s.textContent = '⚠ Live API unavailable — showing confirmed results. Scores: ESPN, CBS Sports, Fox Sports, SBS.';
-    return;
-  }
-  if (!games.length) {
-    c.innerHTML = renderFallbackResults();
-    s.textContent = 'No games scheduled today in ESPN. Confirmed results shown below. Source: ESPN, CBS Sports, Fox Sports, SBS.';
-    return;
-  }
-
-  let html = '';
-  for (const g of games) {
-    const ho  = getOwner(g.homeName);
-    const ao  = getOwner(g.awayName);
-    const sw  = ho || ao;
-    const isLive = g.status === 'STATUS_IN_PROGRESS';
-    const isFT   = g.status === 'STATUS_FINAL';
-    let statusTxt, statusCls;
-    if (isLive) { statusTxt = g.clock + (g.period===2?' (2H)':g.period===1?' (1H)':''); statusCls='live-txt'; }
-    else if (isFT) { statusTxt='Full Time'; statusCls=''; }
-    else { statusTxt='Kick off ' + fmtAEST(g.date); statusCls=''; }
-
-    html += `<div class="match-card${isLive?' live':''}${sw?' sweep':''}">
-      <div class="mc-top">
-        <div class="mc-team">
-          <span class="mc-flag">${flagFromAbbr(g.homeAbbr)}</span>
-          <div><div class="mc-name">${g.homeName}</div>${ho?`<div class="mc-owner">${ho}</div>`:''}
-          </div>
-        </div>
-        <div class="mc-center">
-          <div class="mc-score${isLive?' live':''}">${isFT||isLive ? g.homeScore+' – '+g.awayScore : '–'}</div>
-          <div class="mc-status ${statusCls}">${statusTxt}</div>
-        </div>
-        <div class="mc-team r">
-          <span class="mc-flag">${flagFromAbbr(g.awayAbbr)}</span>
-          <div><div class="mc-name">${g.awayName}</div>${ao?`<div class="mc-owner">${ao}</div>`:''}
-          </div>
-        </div>
-      </div>
-    </div>`;
-  }
-  c.innerHTML = html || '<div class="loading-box">No matches found for today.</div>';
-  s.textContent = 'Live data: ESPN API · Refreshes every 60 seconds.';
-}
-
-function renderFallbackResults() {
-  const done = ALL_FIXTURES.filter(f => f.ft);
-  let html = '<div class="sec" style="padding-top:0">Confirmed completed matches</div>';
-  for (const f of done) {
-    const ho = getOwner(f.home);
-    const ao = getOwner(f.away);
-    const sw = ho || ao;
-    html += `<div class="match-card${sw?' sweep':''}">
-      <div class="mc-top">
-        <div class="mc-team"><span class="mc-flag">${flag(f.homeA)}</span>
-          <div><div class="mc-name">${f.home}</div>${ho?`<div class="mc-owner">${ho}</div>`:''}</div>
-        </div>
-        <div class="mc-center">
-          <div class="mc-score">${f.hs} – ${f.as}</div>
-          <div class="mc-status">Full Time · ${f.date} · Group ${f.group}</div>
-        </div>
-        <div class="mc-team r"><span class="mc-flag">${flag(f.awayA)}</span>
-          <div><div class="mc-name">${f.away}</div>${ao?`<div class="mc-owner">${ao}</div>`:''}</div>
-        </div>
-      </div>
-      ${f.scorers?`<div class="mc-bottom"><div class="mc-scorer">⚽ ${f.scorers}</div></div>`:''}
-    </div>`;
-  }
-  return html;
-}
-
-function flagFromAbbr(abbr) {
-  // ESPN uses 3-letter abbrs — map common ones
-  const map = {
-    'MEX':'🇲🇽','RSA':'🇿🇦','KOR':'🇰🇷','CZE':'🇨🇿','CAN':'🇨🇦','BIH':'🇧🇦',
-    'QAT':'🇶🇦','SUI':'🇨🇭','BRA':'🇧🇷','MAR':'🇲🇦','HAI':'🇭🇹','SCO':'🏴󠁧󠁢󠁳󠁣󠁴󠁿',
-    'USA':'🇺🇸','PAR':'🇵🇾','AUS':'🇦🇺','TUR':'🇹🇷','GER':'🇩🇪','CUW':'🇨🇼',
-    'CIV':'🇨🇮','NED':'🇳🇱','ECU':'🇪🇨','JPN':'🇯🇵','SWE':'🇸🇪','TUN':'🇹🇳',
-    'ESP':'🇪🇸','CPV':'🇨🇻','BEL':'🇧🇪','KSA':'🇸🇦','IRI':'🇮🇷','URU':'🇺🇾',
-    'NZL':'🇳🇿','EGY':'🇪🇬','FRA':'🇫🇷','SEN':'🇸🇳','IRQ':'🇮🇶','NOR':'🇳🇴',
-    'ARG':'🇦🇷','ALG':'🇩🇿','AUT':'🇦🇹','JOR':'🇯🇴','POR':'🇵🇹','COD':'🇨🇩',
-    'UZB':'🇺🇿','COL':'🇨🇴','GHA':'🇬🇭','PAN':'🇵🇦','CRO':'🇭🇷','ENG':'🏴󠁧󠁢󠁥󠁮󠁧󠁿',
-  };
-  return map[abbr] || '🏳️';
-}
-
-function fmtAEST(isoDate) {
-  if (!isoDate) return '';
-  try {
-    const d = new Date(isoDate);
-    return d.toLocaleString('en-AU', { timeZone:'Australia/Brisbane', hour:'numeric', minute:'2-digit', hour12:true });
-  } catch { return ''; }
-}
-
-// ── RENDER ALL FIXTURES ────────────────────────────────
-function renderAllFixtures() {
-  const c = document.getElementById('all-fixtures-container');
-  let html = '';
-  let curDate = '';
-  for (const f of ALL_FIXTURES) {
-    if (f.date !== curDate) {
-      curDate = f.date;
-      const isToday = f.date.includes('13 Jun') || f.date.includes('14 Jun');
-      html += `<div class="date-div${isToday?' today':''}">${f.date}</div>`;
-    }
-    const ho = getOwner(f.home);
-    const ao = getOwner(f.away);
-    const sw = ho || ao;
-    const done = f.ft;
-    html += `<div class="match-card${sw?' sweep':''}">
-      <div class="mc-top">
-        <div class="mc-team"><span class="mc-flag">${flag(f.homeA)}</span>
-          <div><div class="mc-name">${f.home}</div>${ho?`<div class="mc-owner">${ho}</div>`:''}</div>
-        </div>
-        <div class="mc-center">
-          ${done
-            ? `<div class="mc-score">${f.hs} – ${f.as}</div><div class="mc-status">FT · Grp ${f.group}</div>`
-            : `<div class="mc-score" style="font-size:14px;color:var(--muted)">vs</div><div class="mc-status">${f.aest} · Grp ${f.group}</div>`
-          }
-        </div>
-        <div class="mc-team r"><span class="mc-flag">${flag(f.awayA)}</span>
-          <div><div class="mc-name">${f.away}</div>${ao?`<div class="mc-owner">${ao}</div>`:''}</div>
-        </div>
-      </div>
-      ${done && f.scorers?`<div class="mc-bottom"><div class="mc-scorer">⚽ ${f.scorers}</div></div>`:''}
-    </div>`;
-  }
-  c.innerHTML = html;
-}
-
-// ── RENDER GROUPS ──────────────────────────────────────
-function renderGroups() {
-  const c = document.getElementById('groups-container');
-  let html = '<div class="groups-grid">';
-  for (const g of GROUP_DATA) {
-    html += `<div class="grp-card">
-      <div class="grp-hdr"><div class="grp-letter">${g.letter}</div><div class="grp-desc">Group ${g.letter}</div></div>
-      <div class="grp-rows">`;
-    for (const t of g.teams) {
-      const owner = getOwner(t.name);
-      const pts   = STANDINGS[t.name] !== undefined ? STANDINGS[t.name] : '–';
-      html += `<div class="grp-row">
-        <span class="grp-flag">${flag(t.abbr)}</span>
-        <span class="grp-tname">${t.name}</span>
-        ${owner?`<span class="grp-owner">${owner}</span>`:''}
-        <span class="grp-pts">${pts}</span>
-      </div>`;
-    }
-    html += `</div></div>`;
-  }
-  html += '</div>';
-  c.innerHTML = html;
-}
-
-// ── R32 BRACKET PLACEHOLDERS ──────────────────────────
-function renderR32() {
-  const c = document.getElementById('b-r32');
-  const slots = [
-    ['1A','3rd best','28 Jun'],['1B','2E','29 Jun'],['1C','2F','29 Jun'],
-    ['1D','2G','30 Jun'],['1E','2H','30 Jun'],['1F','2I','1 Jul'],
-    ['1G','2J','1 Jul'],['1H','2K','2 Jul'],['1I','2L','2 Jul'],
-    ['1J','2A','3 Jul'],['1K','2B','3 Jul'],['1L','3rd','3 Jul'],
-    ['3rd','3rd','3 Jul'],['3rd','3rd','3 Jul'],['3rd','3rd','3 Jul'],['3rd','3rd','3 Jul'],
-  ];
-  c.innerHTML = slots.map(([h,a,d]) => `
-    <div class="b-slot">
-      <div class="b-card">
-        <div class="b-team"><span class="bf">–</span><span class="bn">${h}</span><span class="bo">TBD</span><span class="bs">–</span></div>
-        <div class="b-team"><span class="bf">–</span><span class="bn">${a}</span><span class="bo">TBD</span><span class="bs">–</span></div>
-      </div>
-      <div class="b-time">${d}</div>
-    </div>`).join('');
-}
-
-// ── TABS ───────────────────────────────────────────────
-function showPage(id, el) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+function show(id,el){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   el.classList.add('active');
 }
-
-// ── AUTO-REFRESH ───────────────────────────────────────
-async function loadLive() {
-  try {
-    const data  = await fetchLiveScores();
-    const games = parseESPN(data);
-    renderLive(games, null);
-  } catch(e) {
-    renderLive([], e);
-  }
-  const now = new Date();
-  document.getElementById('last-updated').textContent =
-    'Updated ' + now.toLocaleTimeString('en-AU',{timeZone:'Australia/Brisbane',hour:'2-digit',minute:'2-digit'}) + ' AEST';
-}
-
-// ── INIT ───────────────────────────────────────────────
-renderAllFixtures();
-renderGroups();
-renderR32();
-loadLive();
-setInterval(loadLive, 60000); // refresh every 60s
 </script>
 </body>
 </html>
